@@ -337,12 +337,8 @@ npm run build
 npm run server
 ```
 
-### Deployment Options
-- **Netlify**: Drag and drop the `build` folder
-- **Vercel**: Connect your GitHub repository
-- **AWS S3**: Upload the `build` folder to S3
-- **Docker**: Use the provided Dockerfile
-- **Heroku**: Deploy with Node.js buildpack
+### Deployed App Link
+- **Vercel**: https://ghl-assignement.vercel.app/
 
 ## 📊 Performance Metrics
 
