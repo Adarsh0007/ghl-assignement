@@ -93,7 +93,7 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400">
+      <label htmlFor="tag-input" className="block text-sm font-medium text-gray-500 dark:text-gray-400">
         Tags
       </label>
       
@@ -135,6 +135,7 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
         <div className="relative">
           <div className="flex items-center space-x-2">
             <input
+              id="tag-input"
               ref={inputRef}
               type="text"
               value={newTag}

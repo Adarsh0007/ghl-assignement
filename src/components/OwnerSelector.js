@@ -77,6 +77,7 @@ const OwnerSelector = ({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
+              id="owner-search"
               type="text"
               placeholder="Search owners..."
               value={searchQuery}
@@ -93,6 +94,7 @@ const OwnerSelector = ({
               {filteredOwners.map((owner) => (
                 <label
                   key={owner.id}
+                  htmlFor={`owner-${owner.id}`}
                   className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
                     selectedOwner === owner.name
                       ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
@@ -101,6 +103,7 @@ const OwnerSelector = ({
                 >
                   <div className="flex items-center justify-center w-5 h-5">
                     <input
+                      id={`owner-${owner.id}`}
                       type="radio"
                       name="owner"
                       value={owner.name}

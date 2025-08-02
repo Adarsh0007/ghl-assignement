@@ -112,10 +112,11 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
         <div className="p-6 space-y-6">
           {/* Field Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="filter-field-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Field Type
             </label>
             <select
+              id="filter-field-type"
               value={filters.fieldType}
               onChange={(e) => handleFilterChange('fieldType', e.target.value)}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -130,10 +131,11 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
 
           {/* Folder Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="filter-folder" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Folder
             </label>
             <select
+              id="filter-folder"
               value={filters.folder}
               onChange={(e) => handleFilterChange('folder', e.target.value)}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -148,8 +150,9 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
 
           {/* Checkbox Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <label className="flex items-center space-x-3 cursor-pointer">
+            <label htmlFor="filter-required" className="flex items-center space-x-3 cursor-pointer">
               <input
+                id="filter-required"
                 type="checkbox"
                 checked={filters.required}
                 onChange={(e) => handleFilterChange('required', e.target.checked)}
@@ -158,8 +161,9 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
               <span className="text-sm text-gray-700 dark:text-gray-300">Required Fields</span>
             </label>
 
-            <label className="flex items-center space-x-3 cursor-pointer">
+            <label htmlFor="filter-editable" className="flex items-center space-x-3 cursor-pointer">
               <input
+                id="filter-editable"
                 type="checkbox"
                 checked={filters.editable}
                 onChange={(e) => handleFilterChange('editable', e.target.checked)}
@@ -168,8 +172,9 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
               <span className="text-sm text-gray-700 dark:text-gray-300">Editable Fields</span>
             </label>
 
-            <label className="flex items-center space-x-3 cursor-pointer">
+            <label htmlFor="filter-has-value" className="flex items-center space-x-3 cursor-pointer">
               <input
+                id="filter-has-value"
                 type="checkbox"
                 checked={filters.hasValue}
                 onChange={(e) => handleFilterChange('hasValue', e.target.checked)}
@@ -181,10 +186,10 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
 
           {/* Tags Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="filter-tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Tags
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div id="filter-tags" className="flex flex-wrap gap-2">
               {availableTags.map(tag => (
                 <button
                   key={tag}
@@ -203,10 +208,11 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
 
           {/* Owner Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="filter-owner" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Owner
             </label>
             <select
+              id="filter-owner"
               value={filters.owner}
               onChange={(e) => handleFilterChange('owner', e.target.value)}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
