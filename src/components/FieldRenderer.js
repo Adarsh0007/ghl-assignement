@@ -26,6 +26,11 @@ const FieldRenderer = ({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Accessibility IDs
+  const fieldId = `field-${field.key}`;
+  const errorId = `error-${field.key}`;
+  const descriptionId = `description-${field.key}`;
+
   // Parse phone number and set country when value changes
   useEffect(() => {
     if (field.type === 'phone') {
@@ -205,28 +210,36 @@ const FieldRenderer = ({
       case 'text':
         return (
           <input
+            id={fieldId}
             type="text"
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
             maxLength={255}
             placeholder={`Enter ${field.label.toLowerCase()}`}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
       case 'email':
         return (
           <input
+            id={fieldId}
             type={field.type}
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
             maxLength={254}
             placeholder={`Enter ${field.label.toLowerCase()}`}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
@@ -237,36 +250,47 @@ const FieldRenderer = ({
             <button
               type="button"
               onClick={handleOpenCountrySelector}
+              onKeyDown={(e) => handleKeyDown(e, handleOpenCountrySelector)}
               disabled={isSaving}
-              className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label={`Select country code (currently ${selectedCountry?.name || 'United States'})`}
+              aria-haspopup="dialog"
+              aria-expanded="false"
             >
-              <span className="text-lg">{selectedCountry?.flag || '🌍'}</span>
+              <span className="text-lg" aria-hidden="true">{selectedCountry?.flag || '🌍'}</span>
               <span className="text-sm text-gray-900 dark:text-white">
                 {selectedCountry?.dialCode || '+1'}
               </span>
-              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
             </button>
 
             {/* Phone Number Input */}
             <div className="flex items-center space-x-2">
               <input
+                id={fieldId}
                 type="tel"
                 value={phoneNumber || ''}
                 onChange={(e) => handlePhoneNumberChange(e.target.value)}
-                className={`input-field flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                className={`input-field flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
                 required={field.required}
                 disabled={isSaving}
                 maxLength={15}
                 placeholder={selectedCountry ? `Enter ${selectedCountry.name} phone number` : "Enter phone number"}
                 title={selectedCountry ? `Format: ${selectedCountry.format || 'No specific format'}` : "Enter phone number"}
+                aria-describedby={descriptionId}
+                aria-invalid={!!validationError}
+                aria-required={field.required}
               />
               {field.showCallButton && editValue && (
                 <button
                   onClick={handleCall}
+                  onKeyDown={(e) => handleKeyDown(e, handleCall)}
                   disabled={isSaving}
-                  className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                  aria-label={`Call ${editValue}`}
+                  title={`Call ${editValue}`}
                 >
-                  <Phone className="w-4 h-4" />
+                  <Phone className="w-4 h-4" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -279,25 +303,33 @@ const FieldRenderer = ({
       case 'textarea':
         return (
           <textarea
+            id={fieldId}
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             rows={3}
             required={field.required}
             disabled={isSaving}
             maxLength={1000}
             placeholder={`Enter ${field.label.toLowerCase()}`}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
       case 'select':
         return (
           <select
+            id={fieldId}
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           >
             <option value="">Select {field.label.toLowerCase()}</option>
             {field.options?.map((option) => (
@@ -359,54 +391,70 @@ const FieldRenderer = ({
       case 'integer':
         return (
           <input
+            id={fieldId}
             type="number"
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
             min={field.min}
             max={field.max}
             step={field.step}
             placeholder={`Enter ${field.label.toLowerCase()}`}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
       case 'date':
         return (
           <input
+            id={fieldId}
             type="date"
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
       case 'time':
         return (
           <input
+            id={fieldId}
             type="time"
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
       case 'url':
         return (
           <input
+            id={fieldId}
             type="url"
             value={editValue || ''}
             onChange={(e) => handleEditChange(e.target.value)}
-            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
             required={field.required}
             disabled={isSaving}
             maxLength={2083}
             placeholder={`Enter ${field.label.toLowerCase()}`}
+            aria-describedby={descriptionId}
+            aria-invalid={!!validationError}
+            aria-required={field.required}
           />
         );
       
@@ -416,21 +464,54 @@ const FieldRenderer = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalIsEditing, field.type, field.label, field.required, field.options, field.showCallButton, field.step, field.min, field.max, editValue, validationError, isSaving, isExpanded, handleEditChange, handleCall, selectedCountry, phoneNumber, handlePhoneNumberChange, handleOpenCountrySelector, handleCountrySelect]);
 
+  const handleKeyDown = (event, action) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      action();
+    }
+  };
+
   return (
-    <div className={`py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${hasError ? 'bg-red-50 dark:bg-red-900/10 border-l-4 border-l-red-500' : ''}`}>
+    <div 
+      className={`py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${hasError ? 'bg-red-50 dark:bg-red-900/10 border-l-4 border-l-red-500' : ''}`}
+      role="group"
+      aria-labelledby={`${fieldId}-label`}
+      aria-describedby={validationError || errorMessage ? errorId : undefined}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+          <label 
+            id={`${fieldId}-label`}
+            htmlFor={fieldId}
+            className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+          >
             {field.label}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
-            {hasError && <span className="text-red-500 ml-1">⚠️</span>}
+            {field.required && <span className="text-red-500 ml-1" aria-label="required">*</span>}
+            {hasError && <span className="text-red-500 ml-1" aria-label="has error">⚠️</span>}
           </label>
+          <div id={descriptionId} className="sr-only">
+            {field.type === 'phone' && 'Phone number field with country code selection'}
+            {field.type === 'email' && 'Email address field'}
+            {field.type === 'multiselect' && 'Multiple selection field'}
+            {field.type === 'select' && 'Single selection dropdown'}
+            {field.type === 'textarea' && 'Multi-line text field'}
+            {field.type === 'number' && 'Numeric input field'}
+            {field.type === 'date' && 'Date picker field'}
+            {field.type === 'time' && 'Time picker field'}
+            {field.type === 'url' && 'Website URL field'}
+            {field.type === 'text' && 'Text input field'}
+          </div>
           {renderFieldValue}
           
           {(validationError || errorMessage) && (
-            <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div 
+              id={errorId}
+              className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+              role="alert"
+              aria-live="polite"
+            >
               <div className="flex items-start space-x-2">
-                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <div className="flex-1">
                   <p className="text-red-800 dark:text-red-200 text-sm font-medium">
                     Invalid {field.label}
@@ -454,40 +535,52 @@ const FieldRenderer = ({
           )}
 
           {saveError && (
-            <ErrorMessage 
-              error={saveError} 
-              variant="error" 
-              showIcon={true}
-              className="text-sm mt-2"
-            />
+            <div role="alert" aria-live="polite">
+              <ErrorMessage 
+                error={saveError} 
+                variant="error" 
+                showIcon={true}
+                className="text-sm mt-2"
+              />
+            </div>
           )}
         </div>
         
         {field.editable && !externalIsEditing && (
           <button
             onClick={handleEdit}
+            onKeyDown={(e) => handleKeyDown(e, handleEdit)}
             disabled={isSaving}
-            className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            aria-label={`Edit ${field.label}`}
             title={`Edit ${field.label}`}
           >
-            <Edit3 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <Edit3 className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
           </button>
         )}
         
         {externalIsEditing && (
-          <div className="flex items-center space-x-2 ml-2">
+          <div 
+            className="flex items-center space-x-2 ml-2"
+            role="group"
+            aria-label={`Actions for ${field.label}`}
+          >
             <button
               onClick={handleSave}
+              onKeyDown={(e) => handleKeyDown(e, handleSave)}
               disabled={isSaving || !!validationError}
-              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
               title="Save changes"
             >
               {isSaving ? 'Saving...' : 'Save'}
             </button>
             <button
               onClick={handleCancel}
+              onKeyDown={(e) => handleKeyDown(e, handleCancel)}
               disabled={isSaving}
-              className="px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              aria-label="Cancel editing"
               title="Cancel editing"
             >
               Cancel
@@ -499,4 +592,4 @@ const FieldRenderer = ({
   );
 };
 
-export default FieldRenderer; 
+export default FieldRenderer;
