@@ -1,0 +1,502 @@
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Phone, Edit3, ChevronDown, AlertCircle } from 'lucide-react';
+import { ApiService } from '../services/api.js';
+import { ValidationService } from '../services/validationService.js';
+import { CountryCodesService } from '../services/countryCodesService.js';
+import ErrorMessage from './ErrorMessage.js';
+
+const FieldRenderer = ({
+  field,
+  value,
+  onChange,
+  isEditing: externalIsEditing,
+  onOpenCountrySelector,
+  onFieldEditStart,
+  onFieldEditCancel,
+  onFieldError,
+  onFieldErrorClear,
+  hasError,
+  errorMessage
+}) => {
+  const [validationError, setValidationError] = useState(null);
+  const [saveError, setSaveError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editValue, setEditValue] = useState(value);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Parse phone number and set country when value changes
+  useEffect(() => {
+    if (field.type === 'phone') {
+      const parsed = CountryCodesService.parsePhoneNumber(value);
+      setSelectedCountry(parsed.country);
+      setPhoneNumber(parsed.number);
+    }
+    setEditValue(value);
+  }, [value, field.type]);
+
+  // Reset edit value when external editing state changes
+  useEffect(() => {
+    if (!externalIsEditing) {
+      setEditValue(value);
+      setValidationError(null);
+      setSaveError(null);
+    }
+  }, [externalIsEditing, value]);
+
+  // Validate field on value change
+  useEffect(() => {
+    if (externalIsEditing && editValue !== undefined) {
+      const validation = ValidationService.validateField(editValue, field.type, field.required, selectedCountry);
+      const error = validation.isValid ? null : validation.error;
+      setValidationError(error);
+      
+      // Notify parent about validation errors
+      if (onFieldError) {
+        onFieldError(field.key, error);
+      }
+    } else {
+      setValidationError(null);
+      // Clear error in parent when not editing
+      if (onFieldErrorClear) {
+        onFieldErrorClear(field.key);
+      }
+    }
+  }, [editValue, field.type, field.required, externalIsEditing, selectedCountry, phoneNumber, onFieldError, onFieldErrorClear, field.key]);
+
+  const handleEditChange = useCallback((newValue) => {
+    setEditValue(newValue);
+    setSaveError(null);
+    
+    // For non-phone fields, immediately validate and clear errors if valid
+    if (field.type !== 'phone') {
+      const validation = ValidationService.validateField(newValue, field.type, field.required, selectedCountry);
+      setValidationError(validation.isValid ? null : validation.error);
+    }
+  }, [field.type, field.required, selectedCountry]);
+
+  const handleSave = useCallback(async () => {
+    // Validate before saving
+    const validation = ValidationService.validateField(editValue, field.type, field.required, selectedCountry);
+    if (!validation.isValid) {
+      setValidationError(validation.error);
+      return;
+    }
+
+    setValidationError(null);
+    setSaveError(null);
+
+    // Sanitize the value
+    const sanitizedValue = ValidationService.sanitizeValue(editValue, field.type);
+    
+    try {
+      setIsSaving(true);
+      await onChange(field.key, sanitizedValue);
+      // Note: The parent will handle clearing the editing state after successful save
+    } catch (error) {
+      console.error('Error saving field:', error);
+      setSaveError(error.message || 'Failed to save field');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [editValue, field.type, field.required, field.key, onChange, selectedCountry]);
+
+  const handleCancel = useCallback(() => {
+    setEditValue(value); // Reset to original value
+    setValidationError(null);
+    setSaveError(null);
+    
+    // Notify parent about edit cancel
+    if (onFieldEditCancel) {
+      onFieldEditCancel(field.key);
+    }
+  }, [value, onFieldEditCancel, field.key]);
+
+  const handleEdit = useCallback(() => {
+    setEditValue(value);
+    setValidationError(null);
+    setSaveError(null);
+    
+    // Notify parent about edit start
+    if (onFieldEditStart) {
+      onFieldEditStart(field.key);
+    }
+  }, [value, onFieldEditStart, field.key]);
+
+  // Phone-specific handlers
+  const handleCountrySelect = useCallback((country) => {
+    setSelectedCountry(country);
+    // Update the full phone number with new country code
+    const fullNumber = country.dialCode + ' ' + phoneNumber;
+    setEditValue(fullNumber);
+    
+    // Immediately validate the phone number with new country and clear errors if valid
+    const validation = ValidationService.validateField(fullNumber, field.type, field.required, country);
+    setValidationError(validation.isValid ? null : validation.error);
+  }, [phoneNumber, field.type, field.required]);
+
+  const handlePhoneNumberChange = useCallback((newNumber) => {
+    setPhoneNumber(newNumber);
+    if (selectedCountry) {
+      const fullNumber = selectedCountry.dialCode + ' ' + newNumber;
+      setEditValue(fullNumber);
+      
+      // Immediately validate the new phone number and clear errors if valid
+      const validation = ValidationService.validateField(fullNumber, field.type, field.required, selectedCountry);
+      setValidationError(validation.isValid ? null : validation.error);
+    }
+  }, [selectedCountry, field.type, field.required]);
+
+  const handleOpenCountrySelector = useCallback(() => {
+    if (onOpenCountrySelector) {
+      onOpenCountrySelector(selectedCountry, handleCountrySelect, field.key);
+    }
+  }, [onOpenCountrySelector, selectedCountry, handleCountrySelect, field.key]);
+
+  const handleCall = useCallback(async () => {
+    if (field.type === 'phone' && value) {
+      try {
+        await ApiService.makeCall(value);
+      } catch (error) {
+        console.error('Error making call:', error);
+        // Could show a toast notification here
+      }
+    }
+  }, [field.type, value]);
+
+  // Memoized field value rendering to prevent unnecessary re-renders
+  const renderFieldValue = useMemo(() => {
+    if (!externalIsEditing) {
+      return (
+        <div className="text-gray-900 dark:text-white">
+          {field.type === 'phone' && value ? (
+            <div className="flex items-center space-x-2">
+              {(() => {
+                const parsed = CountryCodesService.parsePhoneNumber(value);
+                return (
+                  <>
+                    <span className="text-lg">{parsed.country.flag}</span>
+                    <span>{CountryCodesService.formatPhoneNumber(parsed.country, parsed.number)}</span>
+                  </>
+                );
+              })()}
+            </div>
+          ) : field.type === 'multiselect' && Array.isArray(value) ? (
+            <div className="flex flex-wrap gap-1">
+              {value.map((item, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-sm"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span>{value || '-'}</span>
+          )}
+        </div>
+      );
+    }
+
+    // Render input fields when editing
+    switch (field.type) {
+      case 'text':
+        return (
+          <input
+            type="text"
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+            maxLength={255}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+          />
+        );
+      
+      case 'email':
+        return (
+          <input
+            type={field.type}
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+            maxLength={254}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+          />
+        );
+      
+      case 'phone':
+        return (
+          <div className="space-y-2">
+            {/* Country Selector Button */}
+            <button
+              type="button"
+              onClick={handleOpenCountrySelector}
+              disabled={isSaving}
+              className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span className="text-lg">{selectedCountry?.flag || '🌍'}</span>
+              <span className="text-sm text-gray-900 dark:text-white">
+                {selectedCountry?.dialCode || '+1'}
+              </span>
+              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            </button>
+
+            {/* Phone Number Input */}
+            <div className="flex items-center space-x-2">
+              <input
+                type="tel"
+                value={phoneNumber || ''}
+                onChange={(e) => handlePhoneNumberChange(e.target.value)}
+                className={`input-field flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                required={field.required}
+                disabled={isSaving}
+                maxLength={15}
+                placeholder={selectedCountry ? `Enter ${selectedCountry.name} phone number` : "Enter phone number"}
+                title={selectedCountry ? `Format: ${selectedCountry.format || 'No specific format'}` : "Enter phone number"}
+              />
+              {field.showCallButton && editValue && (
+                <button
+                  onClick={handleCall}
+                  disabled={isSaving}
+                  className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Phone className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Country Selector Modal */}
+            
+          </div>
+        );
+      
+      case 'textarea':
+        return (
+          <textarea
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            rows={3}
+            required={field.required}
+            disabled={isSaving}
+            maxLength={1000}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+          />
+        );
+      
+      case 'select':
+        return (
+          <select
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+          >
+            <option value="">Select {field.label.toLowerCase()}</option>
+            {field.options?.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        );
+      
+      case 'multiselect':
+        return (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              disabled={isSaving}
+              className={`input-field flex items-center justify-between bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''} disabled:opacity-50 disabled:cursor-not-allowed`}
+            >
+              <span className={editValue && editValue.length > 0 ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>
+                {editValue && editValue.length > 0 
+                  ? `${editValue.length} selected` 
+                  : 'Select options'
+                }
+              </span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isExpanded && (
+              <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg">
+                {field.options?.map((option) => (
+                  <label
+                    key={option}
+                    className="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={editValue?.includes(option) || false}
+                      onChange={(e) => {
+                        const currentValues = editValue || [];
+                        if (e.target.checked) {
+                          handleEditChange([...currentValues, option]);
+                        } else {
+                          handleEditChange(currentValues.filter((v) => v !== option));
+                        }
+                      }}
+                      disabled={isSaving}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'number':
+      case 'integer':
+        return (
+          <input
+            type="number"
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+            min={field.min}
+            max={field.max}
+            step={field.step}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+          />
+        );
+      
+      case 'date':
+        return (
+          <input
+            type="date"
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+          />
+        );
+      
+      case 'time':
+        return (
+          <input
+            type="time"
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+          />
+        );
+      
+      case 'url':
+        return (
+          <input
+            type="url"
+            value={editValue || ''}
+            onChange={(e) => handleEditChange(e.target.value)}
+            className={`input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ${validationError ? 'border-red-500 focus:ring-red-500' : ''}`}
+            required={field.required}
+            disabled={isSaving}
+            maxLength={2083}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+          />
+        );
+      
+      default:
+        return <span>{value || '-'}</span>;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalIsEditing, field.type, field.label, field.required, field.options, field.showCallButton, field.step, field.min, field.max, editValue, validationError, isSaving, isExpanded, handleEditChange, handleCall, selectedCountry, phoneNumber, handlePhoneNumberChange, handleOpenCountrySelector, handleCountrySelect]);
+
+  return (
+    <div className={`py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${hasError ? 'bg-red-50 dark:bg-red-900/10 border-l-4 border-l-red-500' : ''}`}>
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+            {field.label}
+            {field.required && <span className="text-red-500 ml-1">*</span>}
+            {hasError && <span className="text-red-500 ml-1">⚠️</span>}
+          </label>
+          {renderFieldValue}
+          
+          {(validationError || errorMessage) && (
+            <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="flex items-start space-x-2">
+                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-red-800 dark:text-red-200 text-sm font-medium">
+                    Invalid {field.label}
+                  </p>
+                  <p className="text-red-700 dark:text-red-300 text-sm mt-1">
+                    {validationError || errorMessage}
+                  </p>
+                  {field.type === 'phone' && selectedCountry && (
+                    <div className="mt-2 p-2 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded text-xs">
+                      <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">
+                        Expected format for {selectedCountry.name}:
+                      </p>
+                      <p className="text-gray-800 dark:text-gray-200 font-mono">
+                        {selectedCountry.format || 'No specific format'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {saveError && (
+            <ErrorMessage 
+              error={saveError} 
+              variant="error" 
+              showIcon={true}
+              className="text-sm mt-2"
+            />
+          )}
+        </div>
+        
+        {field.editable && !externalIsEditing && (
+          <button
+            onClick={handleEdit}
+            disabled={isSaving}
+            className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title={`Edit ${field.label}`}
+          >
+            <Edit3 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          </button>
+        )}
+        
+        {externalIsEditing && (
+          <div className="flex items-center space-x-2 ml-2">
+            <button
+              onClick={handleSave}
+              disabled={isSaving || !!validationError}
+              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Save changes"
+            >
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
+            <button
+              onClick={handleCancel}
+              disabled={isSaving}
+              className="px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Cancel editing"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FieldRenderer; 

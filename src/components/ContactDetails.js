@@ -1,0 +1,728 @@
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { ApiService } from '../services/api.js';
+import { FilterService } from '../services/filterService.js';
+
+import Header from './Header.js';
+import ContactSummary from './ContactSummary.js';
+import Tabs from './Tabs.js';
+import Search from './Search.js';
+import FolderRenderer from './FolderRenderer.js';
+import FilterModal from './FilterModal.js';
+import CountrySelector from './CountrySelector.js';
+import Demo from './Demo.js';
+import ErrorMessage from './ErrorMessage.js';
+import { DynamicFieldService } from '../services/dynamicFieldService.js';
+
+const ContactDetails = () => {
+  const [layoutConfig, setLayoutConfig] = useState(null);
+  const [contactFieldsConfig, setContactFieldsConfig] = useState(null);
+  const [allContacts, setAllContacts] = useState([]);
+  const [currentContactIndex, setCurrentContactIndex] = useState(0);
+  const [contactData, setContactData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('all-fields');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState(FilterService.getDefaultFilters());
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isCountrySelectorOpen, setIsCountrySelectorOpen] = useState(false);
+  const [countrySelectorData, setCountrySelectorData] = useState({
+    selectedCountry: null,
+    onCountrySelect: null,
+    fieldKey: null
+  });
+  
+  // Pagination and unsaved changes tracking - contact-specific
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [editingFields, setEditingFields] = useState(new Map()); // Map<contactId, Set<fieldKey>>
+  const [fieldErrors, setFieldErrors] = useState(new Map()); // Map<contactId, Map<fieldKey, error>>
+  const [showUnsavedChangesAlert, setShowUnsavedChangesAlert] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState(null);
+
+  // All hooks must be called before any conditional returns
+  const handleFieldChange = useCallback(async (key, value) => {
+    if (!contactData || !allContacts) return;
+    
+    try {
+      const updatedData = { ...contactData, [key]: value };
+      setContactData(updatedData);
+      
+      // Update the contact in the allContacts array
+      const updatedContacts = [...allContacts];
+      updatedContacts[currentContactIndex] = updatedData;
+      setAllContacts(updatedContacts);
+      
+      // Save to backend with error handling
+      await ApiService.saveContact(contactData.id, updatedData);
+      
+      // Clear unsaved changes flag after successful save
+      setHasUnsavedChanges(false);
+      setEditingFields(prev => {
+        const newMap = new Map(prev);
+        const contactEditingFields = newMap.get(contactData.id) || new Set();
+        contactEditingFields.delete(key);
+        if (contactEditingFields.size === 0) {
+          newMap.delete(contactData.id);
+        } else {
+          newMap.set(contactData.id, contactEditingFields);
+        }
+        return newMap;
+      });
+    } catch (error) {
+      console.error('Error saving field:', error);
+      // Revert the change if save failed
+      setContactData(contactData);
+      throw error; // Re-throw to let the field component handle it
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData, allContacts, currentContactIndex]);
+
+  const handleTagsChange = useCallback(async (newTags) => {
+    if (!contactData || !allContacts) return;
+    
+    try {
+      const updatedData = { ...contactData, tags: newTags };
+      setContactData(updatedData);
+      
+      // Update the contact in the allContacts array
+      const updatedContacts = [...allContacts];
+      updatedContacts[currentContactIndex] = updatedData;
+      setAllContacts(updatedContacts);
+      
+      // Save to backend with error handling
+      await ApiService.saveContact(contactData.id, updatedData);
+    } catch (error) {
+      console.error('Error saving tags:', error);
+      // Revert the change if save failed
+      setContactData(contactData);
+      throw error;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData, allContacts, currentContactIndex]);
+
+  const handleOwnerChange = useCallback(async (newOwner) => {
+    if (!contactData || !allContacts) return;
+    
+    try {
+      const updatedData = { ...contactData, owner: newOwner };
+      setContactData(updatedData);
+      
+      // Update the contact in the allContacts array
+      const updatedContacts = [...allContacts];
+      updatedContacts[currentContactIndex] = updatedData;
+      setAllContacts(updatedContacts);
+      
+      // Save to backend with error handling
+      await ApiService.saveContact(contactData.id, updatedData);
+    } catch (error) {
+      console.error('Error saving owner:', error);
+      // Revert the change if save failed
+      setContactData(contactData);
+      throw error;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData, allContacts, currentContactIndex]);
+
+  const handleFollowersChange = useCallback(async (newFollowers) => {
+    if (!contactData || !allContacts) return;
+    
+    try {
+      const updatedData = { ...contactData, followers: newFollowers };
+      setContactData(updatedData);
+      
+      // Update the contact in the allContacts array
+      const updatedContacts = [...allContacts];
+      updatedContacts[currentContactIndex] = updatedData;
+      setAllContacts(updatedContacts);
+      
+      // Save to backend with error handling
+      await ApiService.saveContact(contactData.id, updatedData);
+    } catch (error) {
+      console.error('Error saving followers:', error);
+      // Revert the change if save failed
+      setContactData(contactData);
+      throw error;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactData, allContacts, currentContactIndex]);
+
+  const handleAddField = useCallback(async (folderName, newField) => {
+    if (!contactFieldsConfig) return;
+    
+    try {
+      // Find the folder in the configuration
+      const folderIndex = contactFieldsConfig.folders.findIndex(folder => folder.name === folderName);
+      if (folderIndex === -1) return;
+
+      // Create a copy of the configuration
+      const updatedConfig = {
+        ...contactFieldsConfig,
+        folders: [...contactFieldsConfig.folders]
+      };
+
+      // Add the new field to the folder
+      updatedConfig.folders[folderIndex] = {
+        ...updatedConfig.folders[folderIndex],
+        fields: [...updatedConfig.folders[folderIndex].fields, newField]
+      };
+
+      // Update the configuration
+      setContactFieldsConfig(updatedConfig);
+
+      // Add default value to contact data
+      const defaultValue = DynamicFieldService.getDefaultValue(newField.type);
+      const updatedData = { ...contactData, [newField.key]: defaultValue };
+      setContactData(updatedData);
+
+      // Update the contact in the allContacts array
+      const updatedContacts = [...allContacts];
+      updatedContacts[currentContactIndex] = updatedData;
+      setAllContacts(updatedContacts);
+
+      // Save the updated contact to backend
+      await ApiService.saveContact(contactData.id, updatedData);
+
+      // Note: In a real application, you would also save the updated configuration to backend
+      console.log('New field added:', newField);
+    } catch (error) {
+      console.error('Error adding field:', error);
+      // Revert changes if save failed
+      setContactData(contactData);
+      throw error;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactFieldsConfig, contactData, allContacts, currentContactIndex]);
+
+  const handleCall = useCallback(() => {
+    if (contactData?.phone) {
+      ApiService.makeCall(contactData.phone).catch(console.error);
+    }
+  }, [contactData?.phone]);
+
+  const performNavigation = useCallback((direction) => {
+    if (!allContacts || allContacts.length === 0) return;
+    
+    let newIndex = currentContactIndex;
+    
+    if (direction === 'prev') {
+      newIndex = currentContactIndex > 0 ? currentContactIndex - 1 : allContacts.length - 1;
+    } else if (direction === 'next') {
+      newIndex = currentContactIndex < allContacts.length - 1 ? currentContactIndex + 1 : 0;
+    }
+    
+    setCurrentContactIndex(newIndex);
+    setContactData(allContacts[newIndex]);
+    
+    // Clear any pending navigation
+    setPendingNavigation(null);
+    setShowUnsavedChangesAlert(false);
+    
+    console.log(`Navigating ${direction} to contact ${newIndex + 1} of ${allContacts.length}`);
+  }, [allContacts, currentContactIndex]);
+
+  const handleNavigate = useCallback((direction) => {
+    if (!allContacts || allContacts.length === 0) return;
+    
+    // Check for unsaved changes or errors for current contact only
+    const currentContactFieldErrors = fieldErrors.get(contactData?.id) || new Map();
+    
+    if (hasUnsavedChanges || currentContactFieldErrors.size > 0) {
+      setPendingNavigation(direction);
+      setShowUnsavedChangesAlert(true);
+      return;
+    }
+    
+    // Proceed with navigation
+    performNavigation(direction);
+  }, [allContacts, hasUnsavedChanges, fieldErrors, contactData?.id, performNavigation]);
+
+  const handleBack = useCallback(() => {
+    console.log('Going back');
+    // In a real app, this would navigate back to the contacts list
+  }, []);
+
+  const handleFilterClick = useCallback(() => {
+    setIsFilterModalOpen(true);
+  }, []);
+
+  const handleCloseFilterModal = useCallback(() => {
+    setIsFilterModalOpen(false);
+  }, []);
+
+  const handleApplyFilters = useCallback((newFilters) => {
+    setFilters(newFilters);
+    console.log('Applied filters:', newFilters);
+  }, []);
+
+  // Country selector handlers
+  const handleOpenCountrySelector = useCallback((selectedCountry, onCountrySelect, fieldKey) => {
+    setCountrySelectorData({
+      selectedCountry,
+      onCountrySelect,
+      fieldKey
+    });
+    setIsCountrySelectorOpen(true);
+  }, []);
+
+  const handleCloseCountrySelector = useCallback(() => {
+    setIsCountrySelectorOpen(false);
+    setCountrySelectorData({
+      selectedCountry: null,
+      onCountrySelect: null,
+      fieldKey: null
+    });
+  }, []);
+
+  const handleCountrySelect = useCallback((country) => {
+    if (countrySelectorData.onCountrySelect) {
+      countrySelectorData.onCountrySelect(country);
+    }
+    handleCloseCountrySelector();
+  }, [countrySelectorData, handleCloseCountrySelector]);
+
+  // Field editing and error tracking - contact-specific
+  const handleFieldEditStart = useCallback((fieldKey) => {
+    if (!contactData?.id) return;
+    
+    setEditingFields(prev => {
+      const newMap = new Map(prev);
+      const contactEditingFields = newMap.get(contactData.id) || new Set();
+      contactEditingFields.add(fieldKey);
+      newMap.set(contactData.id, contactEditingFields);
+      return newMap;
+    });
+    setHasUnsavedChanges(true);
+  }, [contactData?.id]);
+
+  const handleFieldEditCancel = useCallback((fieldKey) => {
+    if (!contactData?.id) return;
+    
+    setEditingFields(prev => {
+      const newMap = new Map(prev);
+      const contactEditingFields = newMap.get(contactData.id) || new Set();
+      contactEditingFields.delete(fieldKey);
+      if (contactEditingFields.size === 0) {
+        newMap.delete(contactData.id);
+      } else {
+        newMap.set(contactData.id, contactEditingFields);
+      }
+      return newMap;
+    });
+    
+    // Check if current contact still has unsaved changes
+    const currentContactEditingFields = editingFields.get(contactData.id) || new Set();
+    setHasUnsavedChanges(currentContactEditingFields.size > 1);
+  }, [editingFields, contactData?.id]);
+
+  const handleFieldError = useCallback((fieldKey, error) => {
+    if (!contactData?.id) return;
+    
+    setFieldErrors(prev => {
+      const newMap = new Map(prev);
+      const contactFieldErrors = newMap.get(contactData.id) || new Map();
+      if (error) {
+        contactFieldErrors.set(fieldKey, error);
+      } else {
+        contactFieldErrors.delete(fieldKey);
+      }
+      if (contactFieldErrors.size === 0) {
+        newMap.delete(contactData.id);
+      } else {
+        newMap.set(contactData.id, contactFieldErrors);
+      }
+      return newMap;
+    });
+  }, [contactData?.id]);
+
+  const handleFieldErrorClear = useCallback((fieldKey) => {
+    if (!contactData?.id) return;
+    
+    setFieldErrors(prev => {
+      const newMap = new Map(prev);
+      const contactFieldErrors = newMap.get(contactData.id) || new Map();
+      contactFieldErrors.delete(fieldKey);
+      if (contactFieldErrors.size === 0) {
+        newMap.delete(contactData.id);
+      } else {
+        newMap.set(contactData.id, contactFieldErrors);
+      }
+      return newMap;
+    });
+  }, [contactData?.id]);
+
+  // Memoized filtered folders to prevent unnecessary re-computation
+  const filteredFolders = useMemo(() => {
+    if (!contactFieldsConfig?.folders || !contactData) return [];
+    
+    // First apply search term filtering
+    let searchFilteredFolders = contactFieldsConfig.folders;
+    if (searchTerm.trim()) {
+      searchFilteredFolders = contactFieldsConfig.folders.map(folder => ({
+        ...folder,
+        fields: folder.fields.filter(field => {
+          const fieldLabel = field.label.toLowerCase();
+          const fieldValue = String(contactData[field.key] || '').toLowerCase();
+          const searchLower = searchTerm.toLowerCase();
+          return fieldLabel.includes(searchLower) || fieldValue.includes(searchLower);
+        })
+      })).filter(folder => folder.fields.length > 0);
+    }
+    
+    // Then apply advanced filters
+    return FilterService.filterFolders(searchFilteredFolders, filters, contactData);
+  }, [contactFieldsConfig?.folders, contactData, searchTerm, filters]);
+
+
+
+  // Handle unsaved changes alert - contact-specific
+  const handleUnsavedChangesConfirm = useCallback(() => {
+    // Clear unsaved changes and errors for current contact only
+    setHasUnsavedChanges(false);
+    setEditingFields(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(contactData?.id);
+      return newMap;
+    });
+    setFieldErrors(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(contactData?.id);
+      return newMap;
+    });
+    setShowUnsavedChangesAlert(false);
+    
+    // Proceed with pending navigation
+    if (pendingNavigation) {
+      performNavigation(pendingNavigation);
+    }
+  }, [pendingNavigation, performNavigation, contactData?.id]);
+
+  const handleUnsavedChangesCancel = useCallback(() => {
+    setShowUnsavedChangesAlert(false);
+    setPendingNavigation(null);
+  }, []);
+
+  // Memoized section renderer to prevent unnecessary re-renders
+  const renderSection = useCallback((section) => {
+    switch (section.type) {
+      case 'header':
+        return (
+          <Header
+            key={section.id}
+            title={section.title || 'Contact Details'}
+            showNavigation={section.showNavigation || false}
+            currentContactIndex={currentContactIndex + 1}
+            totalContacts={allContacts.length}
+            onNavigate={handleNavigate}
+            onBack={handleBack}
+          />
+        );
+      
+      case 'contact-summary':
+        return (
+          <ContactSummary
+            key={section.id}
+            contact={contactData}
+            showProfile={section.showProfile || false}
+            showOwner={section.showOwner || false}
+            showFollowers={section.showFollowers || false}
+            showTags={section.showTags || false}
+            onTagsChange={handleTagsChange}
+            onCall={handleCall}
+            onOwnerChange={handleOwnerChange}
+            onFollowersChange={handleFollowersChange}
+          />
+        );
+      
+      case 'tabs':
+        return (
+          <Tabs
+            key={section.id}
+            tabs={section.tabs || []}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        );
+      
+      case 'search':
+        return (
+          <Search
+            key={section.id}
+            placeholder={section.placeholder || 'Search Fields and Folders'}
+            value={searchTerm}
+            onChange={setSearchTerm}
+            showFilter={section.showFilter || false}
+            onFilterClick={handleFilterClick}
+          />
+        );
+      
+      case 'contact-fields':
+        if (activeTab === 'all-fields') {
+          return (
+            <div key={section.id} className="px-6 py-4">
+              {filteredFolders.length > 0 ? (
+                <>
+                  {FilterService.hasActiveFilters(filters) && (
+                    <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                            Filters Applied
+                          </span>
+                          <span className="text-xs text-blue-600 dark:text-blue-300">
+                            Showing {filteredFolders.length} of {contactFieldsConfig?.folders?.length || 0} folders
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setFilters(FilterService.getDefaultFilters())}
+                          className="text-xs text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
+                        >
+                          Clear Filters
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {filteredFolders.map((folder) => (
+                    <FolderRenderer
+                      key={folder.name}
+                      folder={folder}
+                      contactData={contactData}
+                      onFieldChange={handleFieldChange}
+                      searchTerm={searchTerm}
+                      onAddField={handleAddField}
+                      onOpenCountrySelector={handleOpenCountrySelector}
+                      onFieldEditStart={handleFieldEditStart}
+                      onFieldEditCancel={handleFieldEditCancel}
+                      onFieldError={handleFieldError}
+                      onFieldErrorClear={handleFieldErrorClear}
+                      editingFields={editingFields.get(contactData?.id) || new Set()}
+                      fieldErrors={fieldErrors.get(contactData?.id) || new Map()}
+                    />
+                  ))}
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 dark:text-gray-400">
+                    {searchTerm.trim() || FilterService.hasActiveFilters(filters)
+                      ? 'No fields match your search or filter criteria'
+                      : 'No fields available'}
+                  </p>
+                  {(searchTerm.trim() || FilterService.hasActiveFilters(filters)) && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm('');
+                        setFilters(FilterService.getDefaultFilters());
+                      }}
+                      className="mt-2 text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300"
+                    >
+                      Clear search and filters
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        }
+        return (
+          <div key={section.id} className="px-6 py-4">
+            <div className="card p-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <p className="text-gray-500 dark:text-gray-400 text-center">
+                {activeTab === 'dnd' ? 'Do Not Disturb settings will appear here' : 'Actions will appear here'}
+              </p>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    contactData,
+    activeTab,
+    searchTerm,
+    filteredFolders,
+    filters,
+    handleNavigate,
+    handleCall,
+    handleBack,
+    handleTagsChange,
+    handleFieldChange,
+    handleFilterClick,
+    handleAddField,
+    handleOpenCountrySelector,
+    setActiveTab,
+    setSearchTerm,
+    setFilters,
+    handleOwnerChange,
+    handleFollowersChange
+  ]);
+
+  // Memoized sections to prevent unnecessary re-renders
+  const sections = useMemo(() => {
+    return layoutConfig?.sections?.map(renderSection) || null;
+  }, [layoutConfig?.sections, renderSection]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [layout, fields, contacts] = await Promise.all([
+          ApiService.fetchLayoutConfig(),
+          ApiService.fetchContactFieldsConfig(),
+          ApiService.fetchContactData()
+        ]);
+        
+        setLayoutConfig(layout);
+        setContactFieldsConfig(fields);
+        setAllContacts(contacts);
+        
+        // Set the first contact as current
+        if (contacts && contacts.length > 0) {
+          setContactData(contacts[0]);
+          setCurrentContactIndex(0);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">Loading contact details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !layoutConfig || !contactFieldsConfig || !contactData) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+        <div className="max-w-md w-full">
+          <ErrorMessage 
+            error={error || 'Failed to load contact data'} 
+            title="Loading Error"
+            variant="error"
+            showIcon={true}
+            className="mb-4"
+          />
+          <div className="text-center">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-primary"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Demo />
+      {sections}
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={handleCloseFilterModal}
+        onApplyFilters={handleApplyFilters}
+        currentFilters={filters}
+      />
+      <CountrySelector
+        selectedCountry={countrySelectorData.selectedCountry}
+        onCountrySelect={handleCountrySelect}
+        isOpen={isCountrySelectorOpen}
+        onClose={handleCloseCountrySelector}
+        disabled={false}
+      />
+      
+      {/* Unsaved Changes Alert Modal */}
+      {showUnsavedChangesAlert && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    Unsaved Changes
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    You have unsaved changes or validation errors.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Show editing fields */}
+              {(editingFields.get(contactData?.id) || new Set()).size > 0 && (
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                    Fields being edited:
+                  </p>
+                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                    {Array.from(editingFields.get(contactData?.id) || new Set()).map(fieldKey => (
+                      <li key={fieldKey} className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        <span>{fieldKey}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Show field errors */}
+              {(fieldErrors.get(contactData?.id) || new Map()).size > 0 && (
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                    Fields with errors:
+                  </p>
+                  <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+                    {Array.from((fieldErrors.get(contactData?.id) || new Map()).entries()).map(([fieldKey, error]) => (
+                      <li key={fieldKey} className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span>{fieldKey}: {error}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              <div className="flex space-x-3 mt-6">
+                <button
+                  onClick={handleUnsavedChangesCancel}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUnsavedChangesConfirm}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                  Discard Changes & Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ContactDetails; 
