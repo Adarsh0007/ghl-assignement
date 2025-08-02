@@ -220,10 +220,11 @@ const AddFieldModal = ({
           <div className="space-y-4">
             {/* Field Label */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="field-label" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Label *
               </label>
               <input
+                id="field-label"
                 type="text"
                 value={fieldConfig.label}
                 onChange={(e) => handleConfigChange('label', e.target.value)}
@@ -239,10 +240,11 @@ const AddFieldModal = ({
 
             {/* Field Key */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="field-key" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Key *
               </label>
               <input
+                id="field-key"
                 type="text"
                 value={fieldConfig.key}
                 onChange={(e) => handleConfigChange('key', e.target.value)}
@@ -258,10 +260,11 @@ const AddFieldModal = ({
 
             {/* Field Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="field-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Type *
               </label>
               <select
+                id="field-type"
                 value={fieldConfig.type}
                 onChange={(e) => handleConfigChange('type', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -307,10 +310,11 @@ const AddFieldModal = ({
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label htmlFor="field-min-length" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Min Length
                     </label>
                     <input
+                      id="field-min-length"
                       type="number"
                       value={fieldConfig.minLength}
                       onChange={(e) => handleConfigChange('minLength', e.target.value)}
@@ -324,10 +328,11 @@ const AddFieldModal = ({
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label htmlFor="field-max-length" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Max Length
                     </label>
                     <input
+                      id="field-max-length"
                       type="number"
                       value={fieldConfig.maxLength}
                       onChange={(e) => handleConfigChange('maxLength', e.target.value)}
@@ -350,7 +355,7 @@ const AddFieldModal = ({
             {/* Options for Select/Multiselect */}
             {(fieldConfig.type === 'select' || fieldConfig.type === 'multiselect') && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="field-options" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Options *
                 </label>
                 <div className="space-y-2">
@@ -369,6 +374,7 @@ const AddFieldModal = ({
                   ))}
                   <div className="flex space-x-2">
                     <input
+                      id="field-options"
                       type="text"
                       value={newOption}
                       onChange={(e) => setNewOption(e.target.value)}

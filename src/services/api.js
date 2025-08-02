@@ -1,228 +1,223 @@
-// API service with caching and performance optimization
-import { CacheService } from './cacheService.js';
+// Main API Service - Uses specialized services that extend BaseApiService
+import { ContactApiService } from './contactApiService.js';
+import { ConfigApiService } from './configApiService.js';
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// Create service instances
+const contactService = new ContactApiService();
+const configService = new ConfigApiService();
 
+// Main API Service facade
 export class ApiService {
-  // Cache keys
-  static CACHE_KEYS = {
-    LAYOUT_CONFIG: 'layout_config',
-    CONTACT_FIELDS: 'contact_fields',
-    CONTACT_DATA: 'contact_data'
-  };
+  // Cache keys (for backward compatibility)
+  static get CACHE_KEYS() {
+    return contactService.CACHE_KEYS;
+  }
+  
+  static get CACHE_TTL() {
+    return contactService.CACHE_TTL;
+  }
 
-  // Cache TTLs (in milliseconds)
-  static CACHE_TTL = {
-    LAYOUT_CONFIG: 10 * 60 * 1000, // 10 minutes
-    CONTACT_FIELDS: 10 * 60 * 1000, // 10 minutes
-    CONTACT_DATA: 5 * 60 * 1000 // 5 minutes
-  };
-
+  // Layout Configuration
   static async fetchLayoutConfig() {
-    try {
-      const result = await CacheService.getOrFetch(
-        this.CACHE_KEYS.LAYOUT_CONFIG,
-        async () => {
-          await delay(300); // Simulate network delay
-          const response = await fetch('/config/layout.json');
-          if (!response.ok) {
-            throw new Error('Failed to fetch layout config');
-          }
-          const data = await response.json();
-          
-          // Validate layout config structure
-          if (!data || !data.sections || !Array.isArray(data.sections)) {
-            throw new Error('Invalid layout configuration format');
-          }
-          
-          return data;
-        },
-        this.CACHE_TTL.LAYOUT_CONFIG
-      );
-      return result.data;
-    } catch (error) {
-      console.error('Error fetching layout config:', error);
-      throw new Error('Failed to load page layout configuration. Please try again later.');
-    }
+    return contactService.fetchLayoutConfig();
   }
 
+  // Contact Fields Configuration
   static async fetchContactFieldsConfig() {
-    try {
-      const result = await CacheService.getOrFetch(
-        this.CACHE_KEYS.CONTACT_FIELDS,
-        async () => {
-          await delay(200);
-          const response = await fetch('/config/contactFields.json');
-          if (!response.ok) {
-            throw new Error('Failed to fetch contact fields config');
-          }
-          const data = await response.json();
-          
-          // Validate contact fields structure
-          if (!data || !Array.isArray(data.folders)) {
-            throw new Error('Invalid contact fields configuration format');
-          }
-          
-          return data;
-        },
-        this.CACHE_TTL.CONTACT_FIELDS
-      );
-      return result.data;
-    } catch (error) {
-      console.error('Error fetching contact fields:', error);
-      throw new Error('Failed to load contact fields configuration. Please try again later.');
-    }
+    return contactService.fetchContactFieldsConfig();
   }
 
+  // Contact Data Operations
   static async fetchContactData() {
-    try {
-      const result = await CacheService.getOrFetch(
-        this.CACHE_KEYS.CONTACT_DATA,
-        async () => {
-          await delay(400);
-          const response = await fetch('/data/contactData.json');
-          if (!response.ok) {
-            throw new Error('Failed to fetch contact data');
-          }
-          const data = await response.json();
-          
-          // Validate contact data structure (now an array)
-          if (!data || !Array.isArray(data)) {
-            throw new Error('Invalid contact data format - expected array');
-          }
-          
-          return data;
-        },
-        this.CACHE_TTL.CONTACT_DATA
-      );
-      return result.data;
-    } catch (error) {
-      console.error('Error fetching contact data:', error);
-      throw new Error('Failed to load contact data. Please try again later.');
-    }
+    return contactService.fetchContactData();
   }
 
-  // Get a specific contact by ID
   static async getContactById(contactId) {
-    try {
-      const contacts = await this.fetchContactData();
-      const contact = contacts.find(c => c.id === contactId);
-      if (!contact) {
-        throw new Error(`Contact with ID ${contactId} not found`);
-      }
-      return contact;
-    } catch (error) {
-      console.error('Error fetching contact by ID:', error);
-      throw error;
-    }
+    return contactService.getContactById(contactId);
   }
 
-  // Get all contacts
   static async getAllContacts() {
-    try {
-      return await this.fetchContactData();
-    } catch (error) {
-      console.error('Error fetching all contacts:', error);
-      throw error;
-    }
+    return contactService.getAllContacts();
   }
 
-  // Save a specific contact
+  // Contact Save Operations
   static async saveContact(contactId, contactData) {
-    try {
-      const contacts = await this.fetchContactData();
-      const contactIndex = contacts.findIndex(c => c.id === contactId);
-      
-      if (contactIndex === -1) {
-        throw new Error(`Contact with ID ${contactId} not found`);
-      }
-      
-      // Update the contact
-      contacts[contactIndex] = { ...contacts[contactIndex], ...contactData };
-      
-      // Save the updated contacts array
-      await this.saveContactData(contacts);
-      
-      return contacts[contactIndex];
-    } catch (error) {
-      console.error('Error saving contact:', error);
-      throw error;
-    }
+    return contactService.saveContact(contactId, contactData);
   }
 
   static async saveContactData(data) {
-    try {
-      // Validate data before saving
-      if (!data || typeof data !== 'object') {
-        throw new Error('Invalid contact data provided');
-      }
-
-      // Simulate network delay
-      await delay(500);
-      
-      console.log('Saving contact data:', data);
-      
-      // In a real app, this would be a POST/PUT request
-      try {
-        const response = await fetch('/data/contactData.json', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        console.log('Simulated: Contact data updated successfully');
-      } catch (error) {
-        console.log('Simulated: Contact data update completed');
-      }
-
-      // Invalidate cache after successful save
-      CacheService.remove(this.CACHE_KEYS.CONTACT_DATA);
-      
-      return data;
-    } catch (error) {
-      console.error('Error saving contact data:', error);
-      throw new Error('Failed to save contact data. Please try again.');
-    }
+    return contactService.saveContactData(data);
   }
 
+  // Contact Field Operations
+  static async updateContactField(contactId, fieldKey, fieldValue) {
+    return contactService.updateContactField(contactId, fieldKey, fieldValue);
+  }
+
+  // Contact Tags Operations
+  static async addContactTag(contactId, tag) {
+    return contactService.addContactTag(contactId, tag);
+  }
+
+  static async removeContactTag(contactId, tag) {
+    return contactService.removeContactTag(contactId, tag);
+  }
+
+  // Contact Owner/Followers Operations
+  static async updateContactOwner(contactId, owner) {
+    return contactService.updateContactOwner(contactId, owner);
+  }
+
+  static async updateContactFollowers(contactId, followers) {
+    return contactService.updateContactFollowers(contactId, followers);
+  }
+
+  // Call Operations
   static async makeCall(phoneNumber) {
-    try {
-      if (!phoneNumber || typeof phoneNumber !== 'string') {
-        throw new Error('Invalid phone number provided');
-      }
-      
-      await delay(1000);
-      console.log(`Calling ${phoneNumber}...`);
-      // In a real app, this would integrate with a calling service
-    } catch (error) {
-      console.error('Error making call:', error);
-      throw new Error('Failed to initiate call. Please try again.');
-    }
+    return contactService.makeCall(phoneNumber);
   }
 
-  // Clear all cached data
+  // Search Operations
+  static async searchContacts(query, filters = {}) {
+    return contactService.searchContacts(query, filters);
+  }
+
+  // Bulk Operations
+  static async bulkUpdateContacts(updates) {
+    return contactService.bulkUpdateContacts(updates);
+  }
+
+  // Export/Import Operations
+  static async exportContacts(format = 'json') {
+    return contactService.exportContacts(format);
+  }
+
+  static async importContacts(data, format = 'json') {
+    return contactService.importContacts(data, format);
+  }
+
+  // Config Operations
+  static async updateLayoutConfig(config) {
+    return configService.updateLayoutConfig(config);
+  }
+
+  static async updateContactFieldsConfig(config) {
+    return configService.updateContactFieldsConfig(config);
+  }
+
+  static async fetchValidationRules() {
+    return configService.fetchValidationRules();
+  }
+
+  static async updateValidationRules(rules) {
+    return configService.updateValidationRules(rules);
+  }
+
+  static async fetchUIConfig() {
+    return configService.fetchUIConfig();
+  }
+
+  static async updateUIConfig(config) {
+    return configService.updateUIConfig(config);
+  }
+
+  static async fetchThemeConfig() {
+    return configService.fetchThemeConfig();
+  }
+
+  static async updateThemeConfig(config) {
+    return configService.updateThemeConfig(config);
+  }
+
+  static async addDynamicField(folder, config) {
+    return configService.addDynamicField(folder, config);
+  }
+
+  static async updateDynamicField(id, config) {
+    return configService.updateDynamicField(id, config);
+  }
+
+  static async removeDynamicField(id) {
+    return configService.removeDynamicField(id);
+  }
+
+  static async validateConfiguration(config, type) {
+    return configService.validateConfiguration(config, type);
+  }
+
+  static async backupConfiguration() {
+    return configService.backupConfiguration();
+  }
+
+  static async restoreConfiguration(data) {
+    return configService.restoreConfiguration(data);
+  }
+
+  static async exportConfiguration(format = 'json') {
+    return configService.exportConfiguration(format);
+  }
+
+  static async importConfiguration(data, format = 'json') {
+    return configService.importConfiguration(data, format);
+  }
+
+  static async fetchConfigurationSchema() {
+    return configService.fetchConfigurationSchema();
+  }
+
+  static async getConfigurationVersions() {
+    return configService.getConfigurationVersions();
+  }
+
+  static async revertToVersion(id) {
+    return configService.revertToVersion(id);
+  }
+
+  // Health Check
+  static async healthCheck() {
+    const [contactHealth, configHealth] = await Promise.all([
+      contactService.healthCheck(),
+      configService.healthCheck()
+    ]);
+
+    return {
+      status: contactHealth.status === 'healthy' && configHealth.status === 'healthy' ? 'healthy' : 'unhealthy',
+      services: {
+        contact: contactHealth,
+        config: configHealth
+      },
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // Cache Management (for backward compatibility)
   static clearCache() {
-    try {
-      CacheService.clear();
-      console.log('Cache cleared successfully');
-    } catch (error) {
-      console.error('Error clearing cache:', error);
-    }
+    contactService.clearAllContactCache();
+    configService.clearAllConfigCache();
   }
 
-  // Get cache statistics
   static getCacheStats() {
-    try {
-      return CacheService.getStats();
-    } catch (error) {
-      console.error('Error getting cache stats:', error);
-      return null;
-    }
+    return {
+      contact: contactService.getStatus(),
+      config: configService.getStatus()
+    };
+  }
+
+  // Direct access to the underlying services for advanced usage
+  static get contactService() {
+    return contactService;
+  }
+
+  static get configService() {
+    return configService;
+  }
+
+  // Service factory for creating new instances
+  static createContactService(config = {}) {
+    return new ContactApiService(config);
+  }
+
+  static createConfigService(config = {}) {
+    return new ConfigApiService(config);
   }
 } 

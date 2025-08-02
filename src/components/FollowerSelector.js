@@ -95,6 +95,7 @@ const FollowerSelector = ({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
+              id="follower-search"
               type="text"
               placeholder="Search followers..."
               value={searchQuery}
@@ -135,6 +136,7 @@ const FollowerSelector = ({
               {filteredFollowers.map((follower) => (
                 <label
                   key={follower.id}
+                  htmlFor={`follower-${follower.id}`}
                   className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
                     selectedFollowers.has(follower.name)
                       ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
@@ -143,6 +145,7 @@ const FollowerSelector = ({
                 >
                   <div className="flex items-center justify-center w-5 h-5">
                     <input
+                      id={`follower-${follower.id}`}
                       type="checkbox"
                       checked={selectedFollowers.has(follower.name)}
                       onChange={() => handleFollowerToggle(follower.name)}
