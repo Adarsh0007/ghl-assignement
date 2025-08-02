@@ -4,7 +4,7 @@ A modern, config-driven React application that renders a dynamic Contact Details
 
 ## 📚 Documentation
 
-For comprehensive documentation including architecture details, performance optimizations, and technical implementation, see the **[Project Wiki](PROJECT_WIKI.md)**.
+For comprehensive documentation including architecture details, performance optimizations, and technical implementation, see the **[Project Wiki](https://github.com/Adarsh0007/ghl-assignement/wiki/Contact-Details-Page)**.
 
 ## 🎯 Features
 
