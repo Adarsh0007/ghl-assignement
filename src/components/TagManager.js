@@ -98,16 +98,16 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
       </label>
       
       {/* Existing Tags */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 min-h-[2rem]">
         {contactTags.map((tag, index) => (
           <span
             key={index}
-            className="inline-flex items-center space-x-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm"
+            className="inline-flex items-center space-x-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1.5 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
           >
-            <span>{tag}</span>
+            <span className="truncate max-w-[120px] sm:max-w-[150px] lg:max-w-[200px]">{tag}</span>
             <button
               onClick={() => handleRemoveTag(tag)}
-              className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+              className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors flex-shrink-0"
               title="Remove tag"
             >
               <X className="w-3 h-3" />
@@ -122,7 +122,7 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
               setShowAddTag(true);
               setTimeout(() => inputRef.current?.focus(), 100);
             }}
-            className="inline-flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm transition-colors"
+            className="inline-flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full text-sm transition-colors border border-gray-200 dark:border-gray-600"
           >
             <Plus className="w-3 h-3" />
             <span>Add Tag</span>
@@ -142,12 +142,12 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
               onChange={(e) => setNewTag(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type tag name..."
-              className="flex-1 px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <button
               onClick={handleCreateNewTag}
               disabled={!newTag.trim()}
-              className="px-3 py-1 text-sm bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+              className="px-3 py-1.5 text-sm bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-md transition-colors"
             >
               Add
             </button>
@@ -157,7 +157,7 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
                 setNewTag('');
                 setShowSuggestions(false);
               }}
-              className="px-3 py-1 text-sm bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
+              className="px-3 py-1.5 text-sm bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
             >
               Cancel
             </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext.js';
 
 const Header = ({
@@ -36,7 +36,7 @@ const Header = ({
 
   return (
     <header 
-      className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4"
+      className="bg-white dark:bg-gray-800 px-6 pt-4"
       role="banner"
       aria-label="Contact details navigation header"
     >
@@ -67,6 +67,14 @@ const Header = ({
               role="group"
               aria-label="Contact navigation"
             >
+              <span 
+                className="px-2 font-medium"
+                aria-label={`Contact ${currentContactIndex} of ${totalContacts}`}
+                role="status"
+                aria-live="polite"
+              >
+                {currentContactIndex} of {totalContacts}
+              </span>
               <button
                 onClick={handlePrevClick}
                 onKeyDown={(e) => handleKeyDown(e, handlePrevClick)}
@@ -80,16 +88,8 @@ const Header = ({
                 aria-disabled={isFirstContact}
                 title={isFirstContact ? 'First contact' : 'Previous contact'}
               >
-                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                <span className="text-lg font-semibold">&lt;</span>
               </button>
-              <span 
-                className="px-2 font-medium"
-                aria-label={`Contact ${currentContactIndex} of ${totalContacts}`}
-                role="status"
-                aria-live="polite"
-              >
-                {currentContactIndex} of {totalContacts}
-              </span>
               <button
                 onClick={handleNextClick}
                 onKeyDown={(e) => handleKeyDown(e, handleNextClick)}
@@ -103,7 +103,7 @@ const Header = ({
                 aria-disabled={isLastContact}
                 title={isLastContact ? 'Last contact' : 'Next contact'}
               >
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                <span className="text-lg font-semibold">&gt;</span>
               </button>
             </div>
           )}

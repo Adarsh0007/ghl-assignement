@@ -14,30 +14,47 @@ const Tabs = ({ tabs, activeTab, onTabChange }) => {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-t-lg shadow-sm"
       role="tablist"
       aria-label="Contact information tabs"
     >
-      <div className="flex space-x-8 px-6">
+      <div className="flex">
         {tabs.map((tab, index) => (
-          <button
-            key={tab.id}
-            id={`tab-${tab.id}`}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            aria-controls={`panel-${tab.id}`}
-            tabIndex={activeTab === tab.id ? 0 : -1}
-            onClick={() => handleTabClick(tab.id)}
-            onKeyDown={(e) => handleKeyDown(e, tab.id)}
-            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
-              activeTab === tab.id
-                ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
-            }`}
-            aria-label={`${tab.label} tab`}
-          >
-            {tab.label}
-          </button>
+          <div key={tab.id} className="flex-1 relative">
+            <button
+              id={`tab-${tab.id}`}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              aria-controls={`panel-${tab.id}`}
+              tabIndex={activeTab === tab.id ? 0 : -1}
+              onClick={() => handleTabClick(tab.id)}
+              onKeyDown={(e) => handleKeyDown(e, tab.id)}
+              className={`w-full py-2.5 px-4 font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 relative ${
+                activeTab === tab.id
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                  : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+              aria-label={`${tab.label} tab`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                {tab.icon && (
+                  <span className={`transition-colors ${
+                    activeTab === tab.id
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-gray-400 dark:text-gray-500'
+                  }`}>
+                    {tab.icon}
+                  </span>
+                )}
+                <span>{tab.label}</span>
+              </div>
+            </button>
+            
+            {/* Separator between tabs */}
+            {index < tabs.length - 1 && (
+              <div className="absolute top-1/2 right-0 transform -translate-y-1/2 w-px h-6 bg-gray-200 dark:bg-gray-600"></div>
+            )}
+          </div>
         ))}
       </div>
     </div>

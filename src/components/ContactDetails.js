@@ -9,7 +9,6 @@ import Search from './Search.js';
 import FolderRenderer from './FolderRenderer.js';
 import FilterModal from './FilterModal.js';
 import CountrySelector from './CountrySelector.js';
-import Demo from './Demo.js';
 import ErrorMessage from './ErrorMessage.js';
 import { DynamicFieldService } from '../services/dynamicFieldService.js';
 
@@ -419,51 +418,54 @@ const ContactDetails = () => {
       
       case 'contact-summary':
         return (
-          <ContactSummary
-            key={section.id}
-            contact={contactData}
-            showProfile={section.showProfile || false}
-            showOwner={section.showOwner || false}
-            showFollowers={section.showFollowers || false}
-            showTags={section.showTags || false}
-            onTagsChange={handleTagsChange}
-            onCall={handleCall}
-            onOwnerChange={handleOwnerChange}
-            onFollowersChange={handleFollowersChange}
-          />
+          <div key={section.id} className="p-4 lg:p-6 pb-1">
+            <ContactSummary
+              contact={contactData}
+              showProfile={section.showProfile || false}
+              showOwner={section.showOwner || false}
+              showFollowers={section.showFollowers || false}
+              showTags={section.showTags || false}
+              onTagsChange={handleTagsChange}
+              onCall={handleCall}
+              onOwnerChange={handleOwnerChange}
+              onFollowersChange={handleFollowersChange}
+            />
+          </div>
         );
       
       case 'tabs':
         return (
-          <Tabs
-            key={section.id}
-            tabs={section.tabs || []}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
+          <div key={section.id} className="px-4 lg:px-6 pt-3 lg:pt-4">
+            <Tabs
+              tabs={section.tabs || []}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
         );
       
       case 'search':
         return (
-          <Search
-            key={section.id}
-            placeholder={section.placeholder || 'Search Fields and Folders'}
-            value={searchTerm}
-            onChange={setSearchTerm}
-            showFilter={section.showFilter || false}
-            onFilterClick={handleFilterClick}
-          />
+          <div key={section.id} className="px-4 lg:px-6 pt-3 lg:pt-4">
+            <Search
+              placeholder={section.placeholder || 'Search Fields and Folders'}
+              value={searchTerm}
+              onChange={setSearchTerm}
+              showFilter={section.showFilter || false}
+              onFilterClick={handleFilterClick}
+            />
+          </div>
         );
       
       case 'contact-fields':
         if (activeTab === 'all-fields') {
           return (
-            <div key={section.id} className="px-6 py-4">
+            <div key={section.id} className="p-4 lg:p-6">
               {filteredFolders.length > 0 ? (
                 <>
                   {FilterService.hasActiveFilters(filters) && (
                     <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
                             Filters Applied
@@ -523,8 +525,8 @@ const ContactDetails = () => {
           );
         }
         return (
-          <div key={section.id} className="px-6 py-4">
-            <div className="card p-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <div key={section.id} className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
               <p className="text-gray-500 dark:text-gray-400 text-center">
                 {activeTab === 'dnd' ? 'Do Not Disturb settings will appear here' : 'Actions will appear here'}
               </p>
@@ -630,8 +632,11 @@ const ContactDetails = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Demo />
-      {sections}
+      <div className="h-full">
+        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden h-full mx-2 lg:mx-0">
+          {sections}
+        </div>
+      </div>
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={handleCloseFilterModal}
