@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+
+// Lazy load CustomButton
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -32,12 +35,14 @@ class ErrorBoundary extends React.Component {
               {this.state.error.toString()}
             </pre>
           )}
-          <button
-            onClick={this.handleReload}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-          >
-            Reload Page
-          </button>
+          <Suspense fallback={<button onClick={this.handleReload} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Reload Page</button>}>
+            <CustomButton
+              onClick={this.handleReload}
+              text="Reload Page"
+              variant="primary"
+              size="md"
+            />
+          </Suspense>
         </div>
       );
     }

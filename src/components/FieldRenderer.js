@@ -1,9 +1,24 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Phone, Edit3, ChevronDown, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
+import { Edit3, Phone, AlertCircle, ChevronDown } from 'lucide-react';
 import { ApiService } from '../services/api.js';
 import { ValidationService } from '../services/validationService.js';
 import { CountryCodesService } from '../services/countryCodesService.js';
-import ErrorMessage from './ErrorMessage.js';
+
+// Lazy load child components
+const ErrorMessage = React.lazy(() => import('./ErrorMessage.js'));
+
+// Lazy load CustomButton component
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+
+// Lazy load the generic loading fallback
+const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
+
+// Fallback button component for loading state
+const ButtonFallback = ({ onClick, children, iconClassName, textClassName, ...props }) => (
+  <button onClick={onClick} {...props}>
+    {children}
+  </button>
+);
 
 const FieldRenderer = ({
   field,
@@ -247,22 +262,43 @@ const FieldRenderer = ({
         return (
           <div className="space-y-2">
             {/* Country Selector Button */}
-            <button
-              type="button"
-              onClick={handleOpenCountrySelector}
-              onKeyDown={(e) => handleKeyDown(e, handleOpenCountrySelector)}
-              disabled={isSaving}
-              className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              aria-label={`Select country code (currently ${selectedCountry?.name || 'United States'})`}
-              aria-haspopup="dialog"
-              aria-expanded="false"
-            >
-              <span className="text-lg" aria-hidden="true">{selectedCountry?.flag || '🌍'}</span>
-              <span className="text-sm text-gray-900 dark:text-white">
-                {selectedCountry?.dialCode || '+1'}
-              </span>
-              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-            </button>
+            <Suspense fallback={
+              <ButtonFallback
+                type="button"
+                onClick={handleOpenCountrySelector}
+                onKeyDown={(e) => handleKeyDown(e, handleOpenCountrySelector)}
+                disabled={isSaving}
+                className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                aria-label={`Select country code (currently ${selectedCountry?.name || 'United States'})`}
+                aria-haspopup="dialog"
+                aria-expanded="false"
+              >
+                <span className="text-lg" aria-hidden="true">{selectedCountry?.flag || '🌍'}</span>
+                <span className="text-sm text-gray-900 dark:text-white">
+                  {selectedCountry?.dialCode || '+1'}
+                </span>
+                <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+              </ButtonFallback>
+            }>
+              <CustomButton
+                onClick={handleOpenCountrySelector}
+                onKeyDown={(e) => handleKeyDown(e, handleOpenCountrySelector)}
+                disabled={isSaving}
+                variant="outline"
+                size="md"
+                icon={ChevronDown}
+                aria-label={`Select country code (currently ${selectedCountry?.name || 'United States'})`}
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                className="flex items-center space-x-2 px-3 py-2"
+                iconPosition="right"
+              >
+                <span className="text-lg" aria-hidden="true">{selectedCountry?.flag || '🌍'}</span>
+                <span className="text-sm text-gray-900 dark:text-white">
+                  {selectedCountry?.dialCode || '+1'}
+                </span>
+              </CustomButton>
+            </Suspense>
 
             {/* Phone Number Input */}
             <div className="flex items-center space-x-2">
@@ -282,16 +318,30 @@ const FieldRenderer = ({
                 aria-required={field.required}
               />
               {field.showCallButton && editValue && (
-                <button
-                  onClick={handleCall}
-                  onKeyDown={(e) => handleKeyDown(e, handleCall)}
-                  disabled={isSaving}
-                  className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                  aria-label={`Call ${editValue}`}
-                  title={`Call ${editValue}`}
-                >
-                  <Phone className="w-4 h-4" aria-hidden="true" />
-                </button>
+                <Suspense fallback={
+                  <ButtonFallback
+                    onClick={handleCall}
+                    onKeyDown={(e) => handleKeyDown(e, handleCall)}
+                    disabled={isSaving}
+                    className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                    aria-label={`Call ${editValue}`}
+                    title={`Call ${editValue}`}
+                  >
+                    <Phone className="w-4 h-4" aria-hidden="true" />
+                  </ButtonFallback>
+                }>
+                  <CustomButton
+                    onClick={handleCall}
+                    onKeyDown={(e) => handleKeyDown(e, handleCall)}
+                    disabled={isSaving}
+                    variant="success"
+                    size="sm"
+                    icon={Phone}
+                    aria-label={`Call ${editValue}`}
+                    title={`Call ${editValue}`}
+                    className="p-2"
+                  />
+                </Suspense>
               )}
             </div>
 
@@ -536,27 +586,44 @@ const FieldRenderer = ({
 
           {saveError && (
             <div role="alert" aria-live="polite">
-              <ErrorMessage 
-                error={saveError} 
-                variant="error" 
-                showIcon={true}
-                className="text-sm mt-2"
-              />
+              <Suspense fallback={<ComponentLoadingFallback componentName="ErrorMessage" />}>
+                <ErrorMessage 
+                  error={saveError} 
+                  variant="error" 
+                  showIcon={true}
+                  className="text-sm mt-2"
+                />
+              </Suspense>
             </div>
           )}
         </div>
         
         {field.editable && !externalIsEditing && (
-          <button
-            onClick={handleEdit}
-            onKeyDown={(e) => handleKeyDown(e, handleEdit)}
-            disabled={isSaving}
-            className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            aria-label={`Edit ${field.label}`}
-            title={`Edit ${field.label}`}
-          >
-            <Edit3 className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-          </button>
+          <Suspense fallback={
+            <ButtonFallback
+              onClick={handleEdit}
+              onKeyDown={(e) => handleKeyDown(e, handleEdit)}
+              disabled={isSaving}
+              className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              aria-label={`Edit ${field.label}`}
+              title={`Edit ${field.label}`}
+            >
+              <Edit3 className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+            </ButtonFallback>
+          }>
+            <CustomButton
+              onClick={handleEdit}
+              onKeyDown={(e) => handleKeyDown(e, handleEdit)}
+              disabled={isSaving}
+              variant="none"
+              size="sm"
+              icon={Edit3}
+              aria-label={`Edit ${field.label}`}
+              title={`Edit ${field.label}`}
+              className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              iconClassName="w-4 h-4 text-gray-500 dark:text-gray-400"
+            />
+          </Suspense>
         )}
         
         {externalIsEditing && (
@@ -565,26 +632,56 @@ const FieldRenderer = ({
             role="group"
             aria-label={`Actions for ${field.label}`}
           >
-            <button
-              onClick={handleSave}
-              onKeyDown={(e) => handleKeyDown(e, handleSave)}
-              disabled={isSaving || !!validationError}
-              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-              aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
-              title="Save changes"
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              onClick={handleCancel}
-              onKeyDown={(e) => handleKeyDown(e, handleCancel)}
-              disabled={isSaving}
-              className="px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-              aria-label="Cancel editing"
-              title="Cancel editing"
-            >
-              Cancel
-            </button>
+            <Suspense fallback={
+              <ButtonFallback
+                onClick={handleSave}
+                onKeyDown={(e) => handleKeyDown(e, handleSave)}
+                disabled={isSaving || !!validationError}
+                className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
+                title="Save changes"
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </ButtonFallback>
+            }>
+              <CustomButton
+                onClick={handleSave}
+                onKeyDown={(e) => handleKeyDown(e, handleSave)}
+                disabled={isSaving || !!validationError}
+                variant="success"
+                size="sm"
+                text={isSaving ? 'Saving...' : 'Save'}
+                aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
+                title="Save changes"
+                className="px-2 py-1 text-xs"
+                loading={isSaving}
+              />
+            </Suspense>
+            
+            <Suspense fallback={
+              <ButtonFallback
+                onClick={handleCancel}
+                onKeyDown={(e) => handleKeyDown(e, handleCancel)}
+                disabled={isSaving}
+                className="px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                aria-label="Cancel editing"
+                title="Cancel editing"
+              >
+                Cancel
+              </ButtonFallback>
+            }>
+              <CustomButton
+                onClick={handleCancel}
+                onKeyDown={(e) => handleKeyDown(e, handleCancel)}
+                disabled={isSaving}
+                variant="secondary"
+                size="sm"
+                text="Cancel"
+                aria-label="Cancel editing"
+                title="Cancel editing"
+                className="px-2 py-1 text-xs"
+              />
+            </Suspense>
           </div>
         )}
       </div>

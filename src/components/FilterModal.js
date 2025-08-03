@@ -1,5 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, Suspense } from 'react';
 import { X, Filter } from 'lucide-react';
+
+// Lazy load components
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+const FormField = React.lazy(() => import('./globalComponents/FormField.js'));
 
 const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) => {
   const [filters, setFilters] = useState({
@@ -33,14 +37,14 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
     { value: 'Used Car Buyer Preferences', label: 'Used Car Buyer Preferences' }
   ];
 
-  const handleFilterChange = useCallback((key, value) => {
+  const handleFilterChange = (key, value) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
     }));
-  }, []);
+  };
 
-  const handleClearFilters = useCallback(() => {
+  const handleClearFilters = () => {
     setFilters({
       fieldType: '',
       required: false,
@@ -48,12 +52,12 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
       hasValue: false,
       folder: ''
     });
-  }, []);
+  };
 
-  const handleApplyFilters = useCallback(() => {
+  const handleApplyFilters = () => {
     onApplyFilters(filters);
     onClose();
-  }, [filters, onApplyFilters, onClose]);
+  };
 
   if (!isOpen) return null;
 
@@ -66,18 +70,22 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
             <Filter className="w-6 h-6 text-primary-500" />
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Advanced Filters</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-          </button>
+          <Suspense fallback={<button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"><X className="w-5 h-5 text-gray-500 dark:text-gray-400" /></button>}>
+            <CustomButton
+              onClick={onClose}
+              icon={X}
+              variant="none"
+              size="sm"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              iconClassName="w-5 h-5 text-gray-500 dark:text-gray-400"
+            />
+          </Suspense>
         </div>
 
         {/* Filter Content */}
         <div className="p-6 space-y-6">
           {/* Field Type Filter */}
-          <div>
+          <Suspense fallback={<div>
             <label htmlFor="filter-field-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Field Type
             </label>
@@ -93,10 +101,20 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
                 </option>
               ))}
             </select>
-          </div>
+          </div>}>
+            <FormField
+              type="select"
+              name="fieldType"
+              label="Field Type"
+              value={filters.fieldType}
+              onChange={(value) => handleFilterChange('fieldType', value)}
+              options={fieldTypes}
+              className="mb-0"
+            />
+          </Suspense>
 
           {/* Folder Filter */}
-          <div>
+          <Suspense fallback={<div>
             <label htmlFor="filter-folder" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Folder
             </label>
@@ -112,11 +130,21 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
                 </option>
               ))}
             </select>
-          </div>
+          </div>}>
+            <FormField
+              type="select"
+              name="folder"
+              label="Folder"
+              value={filters.folder}
+              onChange={(value) => handleFilterChange('folder', value)}
+              options={folders}
+              className="mb-0"
+            />
+          </Suspense>
 
           {/* Checkbox Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <label htmlFor="filter-required" className="flex items-center space-x-3 cursor-pointer">
+            <Suspense fallback={<label htmlFor="filter-required" className="flex items-center space-x-3 cursor-pointer">
               <input
                 id="filter-required"
                 type="checkbox"
@@ -125,9 +153,19 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
                 className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">Required Fields</span>
-            </label>
+            </label>}>
+              <FormField
+                type="checkbox"
+                name="required"
+                label="Required Fields"
+                value={filters.required ? ['required'] : []}
+                onChange={(value) => handleFilterChange('required', value.length > 0)}
+                options={[{ value: 'required', label: 'Required Fields' }]}
+                className="mb-0"
+              />
+            </Suspense>
 
-            <label htmlFor="filter-editable" className="flex items-center space-x-3 cursor-pointer">
+            <Suspense fallback={<label htmlFor="filter-editable" className="flex items-center space-x-3 cursor-pointer">
               <input
                 id="filter-editable"
                 type="checkbox"
@@ -136,9 +174,19 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
                 className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">Editable Fields</span>
-            </label>
+            </label>}>
+              <FormField
+                type="checkbox"
+                name="editable"
+                label="Editable Fields"
+                value={filters.editable ? ['editable'] : []}
+                onChange={(value) => handleFilterChange('editable', value.length > 0)}
+                options={[{ value: 'editable', label: 'Editable Fields' }]}
+                className="mb-0"
+              />
+            </Suspense>
 
-            <label htmlFor="filter-has-value" className="flex items-center space-x-3 cursor-pointer">
+            <Suspense fallback={<label htmlFor="filter-has-value" className="flex items-center space-x-3 cursor-pointer">
               <input
                 id="filter-has-value"
                 type="checkbox"
@@ -147,31 +195,49 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
                 className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">Has Value</span>
-            </label>
+            </label>}>
+              <FormField
+                type="checkbox"
+                name="hasValue"
+                label="Has Value"
+                value={filters.hasValue ? ['hasValue'] : []}
+                onChange={(value) => handleFilterChange('hasValue', value.length > 0)}
+                options={[{ value: 'hasValue', label: 'Has Value' }]}
+                className="mb-0"
+              />
+            </Suspense>
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700">
-          <button
-            onClick={handleClearFilters}
-            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-          >
-            Clear All
-          </button>
+          <Suspense fallback={<button onClick={handleClearFilters} className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">Clear All</button>}>
+            <CustomButton
+              onClick={handleClearFilters}
+              text="Clear All"
+              variant="secondary"
+              size="md"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+            />
+          </Suspense>
           <div className="flex space-x-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleApplyFilters}
-              className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-            >
-              Apply Filters
-            </button>
+            <Suspense fallback={<button onClick={onClose} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Cancel</button>}>
+              <CustomButton
+                onClick={onClose}
+                text="Cancel"
+                variant="secondary"
+                size="md"
+                className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              />
+            </Suspense>
+            <Suspense fallback={<button onClick={handleApplyFilters} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Apply Filters</button>}>
+              <CustomButton
+                onClick={handleApplyFilters}
+                text="Apply Filters"
+                variant="primary"
+                size="md"
+              />
+            </Suspense>
           </div>
         </div>
       </div>

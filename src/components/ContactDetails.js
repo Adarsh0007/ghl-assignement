@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { ApiService } from '../services/api.js';
 import { FilterService } from '../services/filterService.js';
 
-import Header from './Header.js';
-import ContactSummary from './ContactSummary.js';
-import Tabs from './Tabs.js';
-import Search from './Search.js';
-import FolderRenderer from './FolderRenderer.js';
-import FilterModal from './FilterModal.js';
-import CountrySelector from './CountrySelector.js';
-import ErrorMessage from './ErrorMessage.js';
-import { DynamicFieldService } from '../services/dynamicFieldService.js';
+// Lazy load all child components
+const Header = React.lazy(() => import('./Header.js'));
+const ContactSummary = React.lazy(() => import('./ContactSummary.js'));
+const Tabs = React.lazy(() => import('./Tabs.js'));
+const Search = React.lazy(() => import('./Search.js'));
+const FolderRenderer = React.lazy(() => import('./FolderRenderer.js'));
+const FilterModal = React.lazy(() => import('./FilterModal.js'));
+const CountrySelector = React.lazy(() => import('./CountrySelector.js'));
+const ErrorMessage = React.lazy(() => import('./ErrorMessage.js'));
+const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
+const ContactDetailsSkeleton = React.lazy(() => import('./globalComponents/ContactDetailsSkeleton.js'));
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+
+// Dynamic import for services
+const { DynamicFieldService } = await import('../services/dynamicFieldService.js');
 
 const ContactDetails = ({ onContactChange }) => {
   const [layoutConfig, setLayoutConfig] = useState(null);
@@ -413,62 +419,69 @@ const ContactDetails = ({ onContactChange }) => {
     switch (section.type) {
       case 'header':
         return (
-          <Header
-            key={`header-${currentContactIndex}`}
-            title={section.title || 'Contact Details'}
-            showNavigation={section.showNavigation || false}
-            currentContactIndex={currentContactIndex + 1}
-            totalContacts={allContacts.length}
-            onNavigate={handleNavigate}
-            onBack={handleBack}
-          />
+          <Suspense fallback={<ComponentLoadingFallback componentName="Header" />}>
+            <Header
+              title={section.title || 'Contact Details'}
+              showNavigation={section.showNavigation || false}
+              currentContactIndex={currentContactIndex + 1}
+              totalContacts={allContacts.length}
+              onNavigate={handleNavigate}
+              onBack={handleBack}
+            />
+          </Suspense>
         );
       
       case 'contact-summary':
         return (
-          <div key={section.id} className="p-4 lg:p-6 pb-1">
-            <ContactSummary
-              contact={contactData}
-              showProfile={section.showProfile || false}
-              showOwner={section.showOwner || false}
-              showFollowers={section.showFollowers || false}
-              showTags={section.showTags || false}
-              onTagsChange={handleTagsChange}
-              onCall={handleCall}
-              onOwnerChange={handleOwnerChange}
-              onFollowersChange={handleFollowersChange}
-            />
+          <div className="p-4 lg:p-6 pb-1">
+            <Suspense fallback={<ComponentLoadingFallback componentName="Contact Summary" />}>
+              <ContactSummary
+                contact={contactData}
+                showProfile={section.showProfile || false}
+                showOwner={section.showOwner || false}
+                showFollowers={section.showFollowers || false}
+                showTags={section.showTags || false}
+                onTagsChange={handleTagsChange}
+                onCall={handleCall}
+                onOwnerChange={handleOwnerChange}
+                onFollowersChange={handleFollowersChange}
+              />
+            </Suspense>
           </div>
         );
       
       case 'tabs':
         return (
-          <div key={section.id} className="px-4 lg:px-6 pt-3 lg:pt-4">
-            <Tabs
-              tabs={section.tabs || []}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
+          <div className="px-4 lg:px-6 pt-3 lg:pt-4">
+            <Suspense fallback={<ComponentLoadingFallback componentName="Tabs" />}>
+              <Tabs
+                tabs={section.tabs || []}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+            </Suspense>
           </div>
         );
       
       case 'search':
         return (
-          <div key={section.id} className="px-4 lg:px-6 pt-3 lg:pt-4">
-            <Search
-              placeholder={section.placeholder || 'Search Fields and Folders'}
-              value={searchTerm}
-              onChange={setSearchTerm}
-              showFilter={section.showFilter || false}
-              onFilterClick={handleFilterClick}
-            />
+          <div className="px-4 lg:px-6 pt-3 lg:pt-4">
+            <Suspense fallback={<ComponentLoadingFallback componentName="Search" />}>
+              <Search
+                placeholder={section.placeholder || 'Search Fields and Folders'}
+                value={searchTerm}
+                onChange={setSearchTerm}
+                showFilter={section.showFilter || false}
+                onFilterClick={handleFilterClick}
+              />
+            </Suspense>
           </div>
         );
       
       case 'contact-fields':
         if (activeTab === 'all-fields') {
           return (
-            <div key={section.id} className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6">
               {filteredFolders.length > 0 ? (
                 <>
                   {FilterService.hasActiveFilters(filters) && (
@@ -482,31 +495,32 @@ const ContactDetails = ({ onContactChange }) => {
                             Showing {filteredFolders.length} of {contactFieldsConfig?.folders?.length || 0} folders
                           </span>
                         </div>
-                        <button
+                        <CustomButton
                           onClick={() => setFilters(FilterService.getDefaultFilters())}
-                          className="text-xs text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
-                        >
-                          Clear Filters
-                        </button>
+                          text="Clear Filters"
+                          variant="secondary"
+                          size="sm"
+                        />
                       </div>
                     </div>
                   )}
                   {filteredFolders.map((folder) => (
-                    <FolderRenderer
-                      key={folder.name}
-                      folder={folder}
-                      contactData={contactData}
-                      onFieldChange={handleFieldChange}
-                      searchTerm={searchTerm}
-                      onAddField={handleAddField}
-                      onOpenCountrySelector={handleOpenCountrySelector}
-                      onFieldEditStart={handleFieldEditStart}
-                      onFieldEditCancel={handleFieldEditCancel}
-                      onFieldError={handleFieldError}
-                      onFieldErrorClear={handleFieldErrorClear}
-                      editingFields={editingFields.get(contactData?.id) || new Set()}
-                      fieldErrors={fieldErrors.get(contactData?.id) || new Map()}
-                    />
+                    <Suspense key={folder.name} fallback={<ComponentLoadingFallback componentName="Folder" />}>
+                      <FolderRenderer
+                        folder={folder}
+                        contactData={contactData}
+                        onFieldChange={handleFieldChange}
+                        searchTerm={searchTerm}
+                        onAddField={handleAddField}
+                        onOpenCountrySelector={handleOpenCountrySelector}
+                        onFieldEditStart={handleFieldEditStart}
+                        onFieldEditCancel={handleFieldEditCancel}
+                        onFieldError={handleFieldError}
+                        onFieldErrorClear={handleFieldErrorClear}
+                        editingFields={editingFields.get(contactData?.id) || new Set()}
+                        fieldErrors={fieldErrors.get(contactData?.id) || new Map()}
+                      />
+                    </Suspense>
                   ))}
                 </>
               ) : (
@@ -517,15 +531,18 @@ const ContactDetails = ({ onContactChange }) => {
                       : 'No fields available'}
                   </p>
                   {(searchTerm.trim() || FilterService.hasActiveFilters(filters)) && (
-                    <button
-                      onClick={() => {
-                        setSearchTerm('');
-                        setFilters(FilterService.getDefaultFilters());
-                      }}
-                      className="mt-2 text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300"
-                    >
-                      Clear search and filters
-                    </button>
+                    <Suspense fallback={<button className="mt-2 text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300">Clear search and filters</button>}>
+                      <CustomButton
+                        onClick={() => {
+                          setSearchTerm('');
+                          setFilters(FilterService.getDefaultFilters());
+                        }}
+                        text="Clear search and filters"
+                        variant="secondary"
+                        size="sm"
+                        className="mt-2"
+                      />
+                    </Suspense>
                   )}
                 </div>
               )}
@@ -533,7 +550,7 @@ const ContactDetails = ({ onContactChange }) => {
           );
         }
         return (
-          <div key={section.id} className="p-4 lg:p-6">
+          <div className="p-4 lg:p-6">
             <div className="p-4 lg:p-6 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
               <p className="text-gray-500 dark:text-gray-400 text-center">
                 {activeTab === 'dnd' ? 'Do Not Disturb settings will appear here' : 'Actions will appear here'}
@@ -569,7 +586,16 @@ const ContactDetails = ({ onContactChange }) => {
 
   // Memoized sections to prevent unnecessary re-renders
   const sections = useMemo(() => {
-    return layoutConfig?.sections?.map(renderSection) || null;
+    if (!layoutConfig?.sections) return null;
+    
+    return layoutConfig.sections.map((section, index) => {
+      const sectionKey = `${section.type}-${section.id || index}`;
+      return (
+        <div key={sectionKey}>
+          {renderSection(section)}
+        </div>
+      );
+    });
   }, [layoutConfig?.sections, renderSection]);
 
   useEffect(() => {
@@ -623,18 +649,15 @@ const ContactDetails = ({ onContactChange }) => {
 
   if (loading) {
     return (
-      <div className="h-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading contact details...</p>
-        </div>
-      </div>
+      <Suspense fallback={<ComponentLoadingFallback componentName="Contact Details Skeleton" size="lg" />}>
+        <ContactDetailsSkeleton />
+      </Suspense>
     );
   }
 
   if (error || !layoutConfig || !contactFieldsConfig || !contactData) {
     return (
-      <div className="h-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+      <div className="min-h-screen lg:h-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <ErrorMessage 
             error={error || 'Failed to load contact data'} 
@@ -655,22 +678,27 @@ const ContactDetails = ({ onContactChange }) => {
             </ul>
           </div>
           <div className="text-center space-y-2">
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn-primary"
-            >
-              Retry
-            </button>
-            <button 
-              onClick={() => {
-                const { localStorageService } = require('../services/localStorageService.js');
-                localStorageService.clearAllData();
-                window.location.reload();
-              }}
-              className="btn-secondary ml-2"
-            >
-              Clear Cache & Retry
-            </button>
+            <Suspense fallback={<button className="btn-primary">Retry</button>}>
+              <CustomButton
+                onClick={() => window.location.reload()} 
+                text="Retry"
+                variant="primary"
+                size="md"
+              />
+            </Suspense>
+            <Suspense fallback={<button className="btn-secondary ml-2">Clear Cache & Retry</button>}>
+              <CustomButton
+                onClick={() => {
+                  const { localStorageService } = require('../services/localStorageService.js');
+                  localStorageService.clearAllData();
+                  window.location.reload();
+                }}
+                text="Clear Cache & Retry"
+                variant="secondary"
+                size="md"
+                className="ml-2"
+              />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -678,25 +706,29 @@ const ContactDetails = ({ onContactChange }) => {
   }
 
   return (
-    <div className="h-full bg-gray-50 dark:bg-gray-900">
-      <div className="h-full">
-        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-y-auto h-full mx-2 lg:mx-0 scroll-smooth">
+    <div className="min-h-screen lg:h-full bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen lg:h-full">
+        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-y-auto min-h-screen lg:h-full mx-2 lg:mx-0 scroll-smooth">
           {sections}
         </div>
       </div>
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onClose={handleCloseFilterModal}
-        onApplyFilters={handleApplyFilters}
-        currentFilters={filters}
-      />
-      <CountrySelector
-        selectedCountry={countrySelectorData.selectedCountry}
-        onCountrySelect={handleCountrySelect}
-        isOpen={isCountrySelectorOpen}
-        onClose={handleCloseCountrySelector}
-        disabled={false}
-      />
+      <Suspense fallback={<ComponentLoadingFallback componentName="Filter Modal" size="md" />}>
+        <FilterModal
+          isOpen={isFilterModalOpen}
+          onClose={handleCloseFilterModal}
+          onApplyFilters={handleApplyFilters}
+          currentFilters={filters}
+        />
+      </Suspense>
+      <Suspense fallback={<ComponentLoadingFallback componentName="Country Selector" size="md" />}>
+        <CountrySelector
+          selectedCountry={countrySelectorData.selectedCountry}
+          onCountrySelect={handleCountrySelect}
+          isOpen={isCountrySelectorOpen}
+          onClose={handleCloseCountrySelector}
+          disabled={false}
+        />
+      </Suspense>
       
       {/* Unsaved Changes Alert Modal */}
       {showUnsavedChangesAlert && (
@@ -756,18 +788,24 @@ const ContactDetails = ({ onContactChange }) => {
               )}
               
               <div className="flex space-x-3 mt-6">
-                <button
-                  onClick={handleUnsavedChangesCancel}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUnsavedChangesConfirm}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-                >
-                  Discard Changes & Continue
-                </button>
+                <Suspense fallback={<button onClick={handleUnsavedChangesCancel} className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">Cancel</button>}>
+                  <CustomButton
+                    onClick={handleUnsavedChangesCancel}
+                    text="Cancel"
+                    variant="secondary"
+                    size="md"
+                    className="flex-1"
+                  />
+                </Suspense>
+                <Suspense fallback={<button onClick={handleUnsavedChangesConfirm} className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">Discard Changes & Continue</button>}>
+                  <CustomButton
+                    onClick={handleUnsavedChangesConfirm}
+                    text="Discard Changes & Continue"
+                    variant="danger"
+                    size="md"
+                    className="flex-1"
+                  />
+                </Suspense>
               </div>
             </div>
           </div>

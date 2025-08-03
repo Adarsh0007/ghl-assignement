@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { AlertCircle, X } from 'lucide-react';
+
+// Lazy load CustomButton
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 
 const ErrorMessage = ({ 
   error, 
@@ -73,12 +76,16 @@ const ErrorMessage = ({
         
         {onClose && (
           <div className="flex-shrink-0 ml-3">
-            <button
-              onClick={onClose}
-              className={`inline-flex ${styles.text} hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent focus:ring-current rounded`}
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <Suspense fallback={<button onClick={onClose} className={`inline-flex ${styles.text} hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent focus:ring-current rounded`}><X className="h-4 w-4" /></button>}>
+              <CustomButton
+                onClick={onClose}
+                icon={X}
+                variant="none"
+                size="sm"
+                className={`inline-flex ${styles.text} hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent focus:ring-current rounded`}
+                iconClassName="h-4 w-4"
+              />
+            </Suspense>
           </div>
         )}
       </div>

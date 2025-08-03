@@ -1,6 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { Plus, Edit3, Trash2, X } from 'lucide-react';
 import { ConversationService } from '../services/conversationService.js';
+
+// Lazy load components
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+const NotesSkeleton = React.lazy(() => import('./globalComponents/NotesSkeleton.js'));
+
+// Loading fallback for CustomButton
+const ButtonFallback = ({ children, ...props }) => (
+  <button 
+    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+    {...props}
+  >
+    {children}
+  </button>
+);
 
 const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
   const [notes, setNotes] = useState([]);
@@ -154,21 +168,27 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
           Notes
         </h2>
         <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setIsAddingNote(true)}
-            className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors"
-            aria-label="Add new note"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="text-blue-600 dark:text-blue-400 font-medium">Add</span>
-          </button>
-          <button
-            onClick={handleClose}
-            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            aria-label="Close notes panel"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <Suspense fallback={<ButtonFallback onClick={() => setIsAddingNote(true)} className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Add new note"><Plus className="w-4 h-4" /><span className="text-blue-600 dark:text-blue-400 font-medium">Add</span></ButtonFallback>}>
+            <CustomButton
+              onClick={() => setIsAddingNote(true)}
+              variant="none"
+              size="md"
+              icon={Plus}
+              text="Add"
+              aria-label="Add new note"
+              className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium"
+            />
+          </Suspense>
+          <Suspense fallback={<ButtonFallback onClick={handleClose} className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Close notes panel"><X className="w-4 h-4" /></ButtonFallback>}>
+            <CustomButton
+              onClick={handleClose}
+              variant="none"
+              size="sm"
+              icon={X}
+              aria-label="Close notes panel"
+              className="p-1"
+            />
+          </Suspense>
         </div>
       </div>
 
@@ -176,14 +196,9 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
       <div className="flex-1 p-4 space-y-4">
         {/* Loading State */}
         {loading && (
-          <div className="text-center py-8">
-            <div className="text-gray-400 dark:text-gray-500 mb-2">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Loading notes...
-            </p>
-          </div>
+          <Suspense fallback={<div>Loading notes...</div>}>
+            <NotesSkeleton />
+          </Suspense>
         )}
 
         {/* Error State */}
@@ -219,19 +234,25 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
                     Just now
                   </span>
                   <div className="flex space-x-2">
-                    <button
-                      onClick={() => setIsAddingNote(false)}
-                      className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleAddNote}
-                      disabled={!newNote.trim()}
-                      className="px-3 py-1 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded transition-colors"
-                    >
-                      Save
-                    </button>
+                    <Suspense fallback={<ButtonFallback onClick={() => setIsAddingNote(false)} className="px-3 py-1 text-sm bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">Cancel</ButtonFallback>}>
+                      <CustomButton
+                        onClick={() => setIsAddingNote(false)}
+                        variant="outline"
+                        size="sm"
+                        text="Cancel"
+                        className="px-3 py-1 text-sm"
+                      />
+                    </Suspense>
+                    <Suspense fallback={<ButtonFallback onClick={handleAddNote} disabled={!newNote.trim()} className="px-3 py-1 text-sm font-medium bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Save</ButtonFallback>}>
+                      <CustomButton
+                        onClick={handleAddNote}
+                        disabled={!newNote.trim()}
+                        variant="primary"
+                        size="sm"
+                        text="Save"
+                        className="px-3 py-1 text-sm font-medium"
+                      />
+                    </Suspense>
                   </div>
                 </div>
               </div>
@@ -255,19 +276,21 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
                       autoFocus
                     />
                     <div className="flex space-x-2">
-                      <button
+                      <CustomButton
                         onClick={() => setEditingNoteId(null)}
-                        className="px-2 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
+                        text="Cancel"
+                        variant="secondary"
+                        size="sm"
+                        className="px-2 py-1 text-xs"
+                      />
+                      <CustomButton
                         onClick={handleSaveEdit}
                         disabled={!editContent.trim()}
-                        className="px-2 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded transition-colors"
-                      >
-                        Save
-                      </button>
+                        text="Save"
+                        variant="primary"
+                        size="sm"
+                        className="px-2 py-1 text-xs font-medium"
+                      />
                     </div>
                   </div>
                 ) : (
@@ -280,20 +303,26 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
                         {formatTimestamp(note.timestamp)}
                       </span>
                       <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => handleEditNote(note.id, note.content)}
-                          className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
-                          aria-label="Edit note"
-                        >
-                          <Edit3 className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteNote(note.id)}
-                          className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                          aria-label="Delete note"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
+                        <Suspense fallback={<ButtonFallback onClick={() => handleEditNote(note.id, note.content)} className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200" aria-label="Edit note"><Edit3 className="w-3 h-3" /></ButtonFallback>}>
+                          <CustomButton
+                            onClick={() => handleEditNote(note.id, note.content)}
+                            variant="none"
+                            size="sm"
+                            icon={Edit3}
+                            aria-label="Edit note"
+                            className="p-1"
+                          />
+                        </Suspense>
+                        <Suspense fallback={<ButtonFallback onClick={() => handleDeleteNote(note.id)} className="p-1 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200" aria-label="Delete note"><Trash2 className="w-3 h-3" /></ButtonFallback>}>
+                          <CustomButton
+                            onClick={() => handleDeleteNote(note.id)}
+                            variant="none"
+                            size="sm"
+                            icon={Trash2}
+                            aria-label="Delete note"
+                            className="p-1"
+                          />
+                        </Suspense>
                       </div>
                     </div>
                   </div>

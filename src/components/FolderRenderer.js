@@ -1,7 +1,22 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, Suspense } from 'react';
 import { ChevronUp, ChevronDown, Plus } from 'lucide-react';
-import FieldRenderer from './FieldRenderer.js';
-import AddFieldModal from './AddFieldModal.js';
+
+// Lazy load child components
+const FieldRenderer = React.lazy(() => import('./FieldRenderer.js'));
+const AddFieldModal = React.lazy(() => import('./AddFieldModal.js'));
+
+// Lazy load CustomButton component
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+
+// Lazy load the generic loading fallback
+const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
+
+// Fallback button component for loading state
+const ButtonFallback = ({ onClick, children, iconClassName, textClassName, ...props }) => (
+  <button onClick={onClick} {...props}>
+    {children}
+  </button>
+);
 
 const FolderRenderer = ({
   folder,
@@ -60,24 +75,56 @@ const FolderRenderer = ({
           <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
           <div className="flex items-center space-x-2">
             {folder.showAddButton && (
-              <button 
-                onClick={handleAddField}
-                className="inline-flex items-center text-xs lg:text-sm text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors"
-              >
-                <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                <span className="hidden sm:inline text-blue-600 dark:text-blue-400 font-medium">{folder.addButtonText || 'Add'}</span>
-              </button>
+              <Suspense fallback={
+                <ButtonFallback 
+                  onClick={handleAddField}
+                  className="inline-flex items-center text-xs lg:text-sm text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors"
+                  aria-label={folder.addButtonText || 'Add'}
+                  title={folder.addButtonText || 'Add'}
+                >
+                  <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
+                  <span className="hidden sm:inline text-blue-600 dark:text-blue-400 font-medium">{folder.addButtonText || 'Add'}</span>
+                </ButtonFallback>
+              }>
+                <CustomButton
+                  onClick={handleAddField}
+                  variant="none"
+                  size="sm"
+                  icon={Plus}
+                  text={folder.addButtonText || 'Add'}
+                  aria-label={folder.addButtonText || 'Add'}
+                  title={folder.addButtonText || 'Add'}
+                  className="inline-flex items-center text-xs lg:text-sm"
+                  iconClassName="text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500"
+                  textClassName="text-blue-600 dark:text-blue-400 font-medium"
+                />
+              </Suspense>
             )}
-            <button
-              onClick={handleToggleExpansion}
-              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
-            >
-              {isExpanded ? (
-                <ChevronUp className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
-              ) : (
-                <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
-              )}
-            </button>
+            <Suspense fallback={
+              <ButtonFallback
+                onClick={handleToggleExpansion}
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
+                aria-label={isExpanded ? "Collapse folder" : "Expand folder"}
+                title={isExpanded ? "Collapse folder" : "Expand folder"}
+              >
+                {isExpanded ? (
+                  <ChevronUp className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
+                )}
+              </ButtonFallback>
+            }>
+              <CustomButton
+                onClick={handleToggleExpansion}
+                variant="none"
+                size="sm"
+                icon={isExpanded ? ChevronUp : ChevronDown}
+                aria-label={isExpanded ? "Collapse folder" : "Expand folder"}
+                title={isExpanded ? "Collapse folder" : "Expand folder"}
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
+                iconClassName="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400"
+              />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -85,32 +132,35 @@ const FolderRenderer = ({
       {isExpanded && (
         <div className="p-3 lg:p-4 bg-white dark:bg-gray-800">
           {filteredFields.map((field) => (
-            <FieldRenderer
-              key={field.key}
-              field={field}
-              value={contactData[field.key]}
-              onChange={onFieldChange}
-              onOpenCountrySelector={onOpenCountrySelector}
-              onFieldEditStart={onFieldEditStart}
-              onFieldEditCancel={onFieldEditCancel}
-              onFieldError={onFieldError}
-              onFieldErrorClear={onFieldErrorClear}
-              isEditing={editingFields?.has(field.key) || false}
-              hasError={fieldErrors?.has(field.key) || false}
-              errorMessage={fieldErrors?.get(field.key) || null}
-            />
+            <Suspense key={field.key} fallback={<ComponentLoadingFallback componentName="Field" />}>
+              <FieldRenderer
+                field={field}
+                value={contactData[field.key]}
+                onChange={onFieldChange}
+                onOpenCountrySelector={onOpenCountrySelector}
+                onFieldEditStart={onFieldEditStart}
+                onFieldEditCancel={onFieldEditCancel}
+                onFieldError={onFieldError}
+                onFieldErrorClear={onFieldErrorClear}
+                isEditing={editingFields?.has(field.key) || false}
+                hasError={fieldErrors?.has(field.key) || false}
+                errorMessage={fieldErrors?.get(field.key) || null}
+              />
+            </Suspense>
           ))}
         </div>
       )}
 
       {/* Add Field Modal */}
-      <AddFieldModal
-        isOpen={isAddFieldModalOpen}
-        onClose={handleCloseAddFieldModal}
-        onAddField={handleNewFieldCreated}
-        folderName={folder.name}
-        existingFields={filteredFields}
-      />
+      <Suspense fallback={<ComponentLoadingFallback componentName="Add Field Modal" />}>
+        <AddFieldModal
+          isOpen={isAddFieldModalOpen}
+          onClose={handleCloseAddFieldModal}
+          onAddField={handleNewFieldCreated}
+          folderName={folder.name}
+          existingFields={filteredFields}
+        />
+      </Suspense>
     </div>
   );
 };

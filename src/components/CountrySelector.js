@@ -1,6 +1,9 @@
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, Suspense } from 'react';
+import { X, Search } from 'lucide-react';
 import { CountryCodesService } from '../services/countryCodesService.js';
+
+// Lazy load CustomButton
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 
 // Memoized country item component for performance
 const CountryItem = React.memo(({ country, isSelected, onSelect, onClose }) => {
@@ -147,13 +150,17 @@ const CountrySelector = ({
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             Select Country
           </h3>
-          <button
-            type="button"
-            onClick={handleCloseClick}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-          </button>
+          <Suspense fallback={<button type="button" onClick={handleCloseClick} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"><X className="w-5 h-5 text-gray-500 dark:text-gray-400" /></button>}>
+            <CustomButton
+              type="button"
+              onClick={handleCloseClick}
+              icon={X}
+              variant="none"
+              size="sm"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              iconClassName="w-5 h-5 text-gray-500 dark:text-gray-400"
+            />
+          </Suspense>
         </div>
 
         {/* Search */}
@@ -171,13 +178,17 @@ const CountrySelector = ({
               disabled={disabled}
             />
             {searchQuery && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-              >
-                <X className="w-4 h-4 text-gray-400" />
-              </button>
+              <Suspense fallback={<button type="button" onClick={handleClearSearch} className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><X className="w-4 h-4 text-gray-400" /></button>}>
+                <CustomButton
+                  type="button"
+                  onClick={handleClearSearch}
+                  icon={X}
+                  variant="none"
+                  size="sm"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                  iconClassName="w-4 h-4 text-gray-400"
+                />
+              </Suspense>
             )}
           </div>
         </div>

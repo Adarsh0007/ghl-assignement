@@ -1,0 +1,292 @@
+[
+  {
+    "contactId": 1,
+    "contactName": "Testfdds User",
+    "conversations": [
+      {
+        "id": 1,
+        "unreadCount": 2,
+        "messages": [
+          {
+            "id": 1,
+            "from": "Me",
+            "to": "Testfdds User",
+            "subject": "Order Update",
+            "content": "Your order has been shipped and will arrive tomorrow.",
+            "direction": "sent",
+            "timestamp": "2024-01-15T10:30:00Z",
+            "unreadCount": 2,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 2,
+            "from": "Testfdds User",
+            "to": "Me",
+            "content": "Thank you for your inquiry. We're looking into this for you.",
+            "direction": "received",
+            "timestamp": "2024-01-15T09:15:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 3,
+            "from": "Me",
+            "to": "Testfdds User",
+            "subject": "Payment Confirmation",
+            "content": "Your payment has been processed successfully.",
+            "direction": "sent",
+            "timestamp": "2024-01-14T16:45:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "unreadCount": 1,
+        "messages": [
+          {
+            "id": 4,
+            "from": "Testfdds User",
+            "to": "Me",
+            "content": "We've resolved the issue with your account. Please try logging in again.",
+            "direction": "received",
+            "timestamp": "2024-01-13T14:20:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 5,
+            "from": "Me",
+            "to": "Testfdds User",
+            "subject": "Account Issue",
+            "content": "I'm having trouble accessing my account. Can you help?",
+            "direction": "sent",
+            "timestamp": "2024-01-13T11:30:00Z",
+            "unreadCount": 0,
+            "hasButtons": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "contactId": 2,
+    "contactName": "Michael Chen",
+    "conversations": [
+      {
+        "id": 3,
+        "unreadCount": 3,
+        "messages": [
+          {
+            "id": 6,
+            "from": "Me",
+            "to": "Michael Chen",
+            "subject": "Tech Support Request",
+            "content": "Need assistance with the new software installation.",
+            "direction": "sent",
+            "timestamp": "2024-01-15T13:45:00Z",
+            "unreadCount": 3,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 7,
+            "from": "Michael Chen",
+            "to": "Me",
+            "content": "We've scheduled a call for tomorrow at 2 PM. Please confirm.",
+            "direction": "received",
+            "timestamp": "2024-01-15T12:30:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 8,
+            "from": "Me",
+            "to": "Michael Chen",
+            "subject": "Software License",
+            "content": "Your software license has been renewed for another year.",
+            "direction": "sent",
+            "timestamp": "2024-01-14T09:15:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "contactId": 3,
+    "contactName": "Emily Rodriguez",
+    "conversations": [
+      {
+        "id": 4,
+        "unreadCount": 0,
+        "messages": [
+          {
+            "id": 9,
+            "from": "Me",
+            "to": "Emily Rodriguez",
+            "subject": "Design Project Update",
+            "content": "The design mockups are ready for your review.",
+            "direction": "sent",
+            "timestamp": "2024-01-15T15:20:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 10,
+            "from": "Emily Rodriguez",
+            "to": "Me",
+            "content": "Great feedback! We'll implement the changes by Friday.",
+            "direction": "received",
+            "timestamp": "2024-01-14T17:30:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 11,
+            "from": "Me",
+            "to": "Emily Rodriguez",
+            "subject": "Project Timeline",
+            "content": "Here's the updated project timeline with milestones.",
+            "direction": "sent",
+            "timestamp": "2024-01-13T10:45:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "contactId": 4,
+    "contactName": "David Thompson",
+    "conversations": [
+      {
+        "id": 5,
+        "unreadCount": 1,
+        "messages": [
+          {
+            "id": 12,
+            "from": "Me",
+            "to": "David Thompson",
+            "subject": "Energy Audit Report",
+            "content": "Your energy audit report is now available for download.",
+            "direction": "sent",
+            "timestamp": "2024-01-15T11:15:00Z",
+            "unreadCount": 1,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 13,
+            "from": "David Thompson",
+            "to": "Me",
+            "content": "We've identified several opportunities for energy savings.",
+            "direction": "received",
+            "timestamp": "2024-01-14T16:00:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 14,
+            "from": "Me",
+            "to": "David Thompson",
+            "subject": "Green Energy Consultation",
+            "content": "Your consultation appointment has been confirmed for next week.",
+            "direction": "sent",
+            "timestamp": "2024-01-12T14:30:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "contactId": 5,
+    "contactName": "Sophia Williams",
+    "conversations": [
+      {
+        "id": 6,
+        "unreadCount": 4,
+        "messages": [
+          {
+            "id": 15,
+            "from": "Me",
+            "to": "Sophia Williams",
+            "subject": "Startup Funding Update",
+            "content": "Great news! Your funding application has been approved.",
+            "direction": "sent",
+            "timestamp": "2024-01-15T16:45:00Z",
+            "unreadCount": 4,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 16,
+            "from": "Sophia Williams",
+            "to": "Me",
+            "content": "Congratulations! We're excited to support your startup journey.",
+            "direction": "received",
+            "timestamp": "2024-01-15T15:30:00Z",
+            "isSmall": false
+          },
+          {
+            "id": 17,
+            "from": "Me",
+            "to": "Sophia Williams",
+            "subject": "Business Plan Review",
+            "content": "Your business plan has been reviewed and feedback is ready.",
+            "direction": "sent",
+            "timestamp": "2024-01-14T13:20:00Z",
+            "unreadCount": 0,
+            "hasButtons": true,
+            "buttons": [
+              { "text": "Track Your Order", "type": "secondary", "icon": null },
+              { "text": "Reply", "type": "primary", "icon": null }
+            ]
+          },
+          {
+            "id": 18,
+            "from": "Sophia Williams",
+            "to": "Me",
+            "content": "Your business model shows great potential. Let's discuss next steps.",
+            "direction": "received",
+            "timestamp": "2024-01-13T11:45:00Z",
+            "isSmall": false
+          }
+        ]
+      }
+    ]
+  }
+] 
