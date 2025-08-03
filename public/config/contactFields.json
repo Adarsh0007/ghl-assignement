@@ -1,0 +1,113 @@
+{
+  "folders": [
+    {
+      "name": "Contact",
+      "showAddButton": true,
+      "addButtonText": "Add",
+      "fields": [
+        {
+          "key": "firstName",
+          "label": "First Name",
+          "type": "text",
+          "required": true,
+          "editable": true
+        },
+        {
+          "key": "lastName",
+          "label": "Last Name",
+          "type": "text",
+          "required": true,
+          "editable": true
+        },
+        {
+          "key": "phone",
+          "label": "Phone Number",
+          "type": "phone",
+          "required": true,
+          "editable": true,
+          "showCallButton": true,
+          "showEditButton": true
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "type": "email",
+          "required": false,
+          "editable": true
+        },
+        {
+          "key": "address",
+          "label": "Address",
+          "type": "textarea",
+          "required": false,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "name": "Additional Info",
+      "showAddButton": false,
+      "addButtonText": "Add",
+      "fields": [
+        {
+          "key": "businessName",
+          "label": "Business Name",
+          "type": "text",
+          "required": false,
+          "editable": true
+        },
+        {
+          "key": "streetAddress",
+          "label": "Street Address",
+          "type": "text",
+          "required": false,
+          "editable": true
+        },
+        {
+          "key": "city",
+          "label": "City",
+          "type": "text",
+          "required": false,
+          "editable": true
+        },
+        {
+          "key": "country",
+          "label": "Country",
+          "type": "text",
+          "required": false,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "name": "Used Car Buyer Preferences",
+      "showAddButton": true,
+      "addButtonText": "Add",
+      "fields": [
+        {
+          "key": "preferredBrands",
+          "label": "Preferred Brands",
+          "type": "multiselect",
+          "required": false,
+          "editable": true,
+          "options": ["Toyota", "Honda", "Ford", "BMW", "Mercedes", "Audi"]
+        },
+        {
+          "key": "budget",
+          "label": "Budget Range",
+          "type": "select",
+          "required": false,
+          "editable": true,
+          "options": ["$10k-$20k", "$20k-$30k", "$30k-$50k", "$50k+"]
+        },
+        {
+          "key": "notes",
+          "label": "Notes",
+          "type": "textarea",
+          "required": false,
+          "editable": true
+        }
+      ]
+    }
+  ]
+} 

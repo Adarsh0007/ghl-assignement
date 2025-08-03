@@ -122,10 +122,10 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
               setShowAddTag(true);
               setTimeout(() => inputRef.current?.focus(), 100);
             }}
-            className="inline-flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full text-sm transition-colors border border-gray-200 dark:border-gray-600"
+            className="inline-flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 px-3 py-1.5 rounded-full text-sm transition-colors border border-gray-200 dark:border-gray-600"
           >
             <Plus className="w-3 h-3" />
-            <span>Add Tag</span>
+            <span className="text-blue-600 dark:text-blue-400 font-medium">Add Tag</span>
           </button>
         )}
       </div>
@@ -147,7 +147,7 @@ const TagManager = ({ contactTags = [], onTagsChange }) => {
             <button
               onClick={handleCreateNewTag}
               disabled={!newTag.trim()}
-              className="px-3 py-1.5 text-sm bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+              className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-md transition-colors"
             >
               Add
             </button>

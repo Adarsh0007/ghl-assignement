@@ -385,7 +385,7 @@ const AddFieldModal = ({
                     <button
                       onClick={handleAddOption}
                       disabled={!newOption.trim()}
-                      className="px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                      className="px-3 py-2 bg-gray-300 dark:bg-gray-600 text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 disabled:bg-gray-200 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -412,12 +412,12 @@ const AddFieldModal = ({
             disabled={!isFormValid}
             className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               isFormValid
-                ? 'text-white bg-primary-600 hover:bg-primary-700'
+                ? 'text-white bg-blue-600 hover:bg-blue-700'
                 : 'text-gray-400 bg-gray-300 dark:bg-gray-600 cursor-not-allowed'
             }`}
             title={!isFormValid ? 'Please fix all errors before adding the field' : ''}
           >
-            Add Field {hasErrors && `(${Object.keys(errors).filter(key => errors[key]).length} errors)`}
+            <span className="font-semibold">Add Field</span> {hasErrors && `(${Object.keys(errors).filter(key => errors[key]).length} errors)`}
           </button>
         </div>
       </div>

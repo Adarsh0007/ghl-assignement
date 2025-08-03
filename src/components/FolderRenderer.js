@@ -62,10 +62,10 @@ const FolderRenderer = ({
             {folder.showAddButton && (
               <button 
                 onClick={handleAddField}
-                className="inline-flex items-center text-xs lg:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                className="inline-flex items-center text-xs lg:text-sm text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors"
               >
                 <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                <span className="hidden sm:inline">{folder.addButtonText || 'Add'}</span>
+                <span className="hidden sm:inline text-blue-600 dark:text-blue-400 font-medium">{folder.addButtonText || 'Add'}</span>
               </button>
             )}
             <button

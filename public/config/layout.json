@@ -1,0 +1,49 @@
+{
+  "sections": [
+    {
+      "id": "header",
+      "type": "header",
+      "title": "Contact Details",
+      "showNavigation": true,
+      "showCallButton": true
+    },
+    {
+      "id": "contact-summary",
+      "type": "contact-summary",
+      "showProfile": true,
+      "showOwner": true,
+      "showFollowers": true,
+      "showTags": true
+    },
+    {
+      "id": "tabs",
+      "type": "tabs",
+      "tabs": [
+        {
+          "id": "all-fields",
+          "label": "All Fields",
+          "active": true
+        },
+        {
+          "id": "dnd",
+          "label": "DND"
+        },
+        {
+          "id": "actions",
+          "label": "Actions"
+        }
+      ]
+    },
+    {
+      "id": "search",
+      "type": "search",
+      "placeholder": "Search Fields and Folders",
+      "showFilter": true
+    },
+    {
+      "id": "contact-fields",
+      "type": "contact-fields",
+      "configFile": "contactFields.json"
+    }
+  ]
+} 

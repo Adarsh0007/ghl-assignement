@@ -1,0 +1,229 @@
+{
+  "1": [
+    {
+      "id": 1001,
+      "content": "Initial contact with Testfdds User. Customer showed interest in Toyota, Honda, Ford, BMW. Budget range: $20k-$30k.",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 101
+    },
+    {
+      "id": 1002,
+      "content": "Budget range discussed: $20k-$30k. Customer seems serious about purchasing. Interested in fuel-efficient vehicles.",
+      "timestamp": "2024-01-15T11:30:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 101
+    },
+    {
+      "id": 1003,
+      "content": "Follow up scheduled for next week. Customer wants to compare options before making decision.",
+      "timestamp": "2024-01-15T12:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 101
+    },
+    {
+      "id": 1004,
+      "content": "Customer mentioned they have a trade-in vehicle. Need to get appraisal details.",
+      "timestamp": "2024-01-14T15:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 102
+    },
+    {
+      "id": 1005,
+      "content": "Discussed financing options. Customer prefers monthly payments over lease.",
+      "timestamp": "2024-01-14T16:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 102
+    },
+    {
+      "id": 1006,
+      "content": "Customer asked about warranty coverage and maintenance packages.",
+      "timestamp": "2024-01-13T10:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1007,
+      "content": "Test drive scheduled for this weekend. Customer excited about the Toyota Camry.",
+      "timestamp": "2024-01-13T11:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 102
+    }
+  ],
+  "2": [
+    {
+      "id": 2001,
+      "content": "Initial contact with Michael Chen. Customer showed interest in Tesla, BMW. Budget range: $40k-$50k.",
+      "timestamp": "2024-01-15T08:00:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 201
+    },
+    {
+      "id": 2002,
+      "content": "Customer is tech-savvy and interested in electric vehicles. Looking for advanced technology features.",
+      "timestamp": "2024-01-15T09:00:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 201
+    },
+    {
+      "id": 2003,
+      "content": "Discussed Tesla Model 3 battery range and charging infrastructure.",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 201
+    },
+    {
+      "id": 2004,
+      "content": "Customer interested in Performance version of Tesla Model 3. Need to check availability.",
+      "timestamp": "2024-01-15T11:00:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 201
+    },
+    {
+      "id": 2005,
+      "content": "BMW 3 Series discussion - customer wants to know about driver assistance features.",
+      "timestamp": "2024-01-14T10:30:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 202
+    },
+    {
+      "id": 2006,
+      "content": "Scheduled demo for BMW 3 Series advanced features next week.",
+      "timestamp": "2024-01-14T11:00:00Z",
+      "author": "Sarah Wilson",
+      "conversationId": 202
+    }
+  ],
+  "3": [
+    {
+      "id": 3001,
+      "content": "Initial contact with Emily Rodriguez. Customer showed interest in Audi, Mercedes. Budget range: $30k-$40k.",
+      "timestamp": "2024-01-15T06:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 301
+    },
+    {
+      "id": 3002,
+      "content": "Customer is very design-focused. Interested in luxury styling and comfort features.",
+      "timestamp": "2024-01-15T07:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 301
+    },
+    {
+      "id": 3003,
+      "content": "Discussed Audi A4 color options and interior customization.",
+      "timestamp": "2024-01-15T08:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 301
+    },
+    {
+      "id": 3004,
+      "content": "Customer interested in different wheel options for Audi A4.",
+      "timestamp": "2024-01-15T09:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 301
+    },
+    {
+      "id": 3005,
+      "content": "Mercedes C-Class discussion - customer wants to know about comfort features.",
+      "timestamp": "2024-01-13T15:20:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 302
+    },
+    {
+      "id": 3006,
+      "content": "Customer comparing Mercedes C-Class with Audi A4. Need to provide comparison chart.",
+      "timestamp": "2024-01-13T16:00:00Z",
+      "author": "Alex Johnson",
+      "conversationId": 302
+    }
+  ],
+  "4": [
+    {
+      "id": 4001,
+      "content": "Initial contact with David Thompson. Customer showed interest in Hyundai, Kia. Budget range: $25k-$35k.",
+      "timestamp": "2024-01-15T04:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 401
+    },
+    {
+      "id": 4002,
+      "content": "Customer is environmentally conscious. Focused on fuel efficiency and eco-friendly options.",
+      "timestamp": "2024-01-15T05:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 401
+    },
+    {
+      "id": 4003,
+      "content": "Discussed Hyundai Sonata MPG ratings and fuel efficiency.",
+      "timestamp": "2024-01-15T06:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 401
+    },
+    {
+      "id": 4004,
+      "content": "Customer interested in hybrid and electric options. Need to provide information on available models.",
+      "timestamp": "2024-01-15T07:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 401
+    },
+    {
+      "id": 4005,
+      "content": "Kia K5 vs Hyundai Sonata fuel efficiency comparison requested.",
+      "timestamp": "2024-01-14T12:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 402
+    },
+    {
+      "id": 4006,
+      "content": "Provided EPA ratings comparison. Customer leaning towards Hyundai for better fuel economy.",
+      "timestamp": "2024-01-14T13:00:00Z",
+      "author": "Lisa Brown",
+      "conversationId": 402
+    }
+  ],
+  "5": [
+    {
+      "id": 5001,
+      "content": "Initial contact with Sophia Williams. Customer showed interest in Ford, Chevrolet. Budget range: $20k-$30k.",
+      "timestamp": "2024-01-15T07:00:00Z",
+      "author": "Mark Davis",
+      "conversationId": 501
+    },
+    {
+      "id": 5002,
+      "content": "Customer is business-focused. Looking for reliable vehicles suitable for business use.",
+      "timestamp": "2024-01-15T08:00:00Z",
+      "author": "Mark Davis",
+      "conversationId": 501
+    },
+    {
+      "id": 5003,
+      "content": "Discussed Ford Mustang reliability ratings and business suitability.",
+      "timestamp": "2024-01-15T09:00:00Z",
+      "author": "Mark Davis",
+      "conversationId": 501
+    },
+    {
+      "id": 5004,
+      "content": "Customer interested in warranty coverage for business use. Need to explain business warranty terms.",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "author": "Mark Davis",
+      "conversationId": 501
+    },
+    {
+      "id": 5005,
+      "content": "Chevrolet Malibu fleet discount inquiry.",
+      "timestamp": "2024-01-13T14:30:00Z",
+      "author": "Mark Davis",
+      "conversationId": 502
+    },
+    {
+      "id": 5006,
+      "content": "Provided fleet pricing information. Customer considering multiple vehicles for business fleet.",
+      "timestamp": "2024-01-13T15:00:00Z",
+      "author": "Mark Davis",
+      "conversationId": 502
+    }
+  ]
+} 

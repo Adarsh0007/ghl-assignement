@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { X, Filter } from 'lucide-react';
 
 const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) => {
@@ -8,14 +8,8 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
     editable: false,
     hasValue: false,
     folder: '',
-    tags: [],
-    budget: '',
-    owner: '',
     ...currentFilters
   });
-
-  const [availableTags, setAvailableTags] = useState([]);
-  const [availableOwners, setAvailableOwners] = useState([]);
 
   // Field type options
   const fieldTypes = [
@@ -39,35 +33,10 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
     { value: 'Used Car Buyer Preferences', label: 'Used Car Buyer Preferences' }
   ];
 
-  // Budget options
-  const budgetOptions = [
-    { value: '', label: 'All Budgets' },
-    { value: '$10k-$20k', label: '$10k - $20k' },
-    { value: '$20k-$30k', label: '$20k - $30k' },
-    { value: '$30k-$50k', label: '$30k - $50k' },
-    { value: '$50k+', label: '$50k+' }
-  ];
-
-  // Load available tags and owners
-  useEffect(() => {
-    // In a real app, this would fetch from API
-    setAvailableTags(['Shared Contact', 'VIP', 'Important', 'Tech', 'Creative', 'Design', 'Environmental', 'Green', 'Startup', 'Innovation']);
-    setAvailableOwners(['Devon Lane', 'Sarah Wilson', 'Alex Johnson', 'Lisa Brown', 'Mark Davis']);
-  }, []);
-
   const handleFilterChange = useCallback((key, value) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
-    }));
-  }, []);
-
-  const handleTagToggle = useCallback((tag) => {
-    setFilters(prev => ({
-      ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag]
     }));
   }, []);
 
@@ -77,10 +46,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
       required: false,
       editable: false,
       hasValue: false,
-      folder: '',
-      tags: [],
-      budget: '',
-      owner: ''
+      folder: ''
     });
   }, []);
 
@@ -182,66 +148,6 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, currentFilters = {} }) =
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">Has Value</span>
             </label>
-          </div>
-
-          {/* Tags Filter */}
-          <div>
-            <label htmlFor="filter-tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Tags
-            </label>
-            <div id="filter-tags" className="flex flex-wrap gap-2">
-              {availableTags.map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => handleTagToggle(tag)}
-                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                    filters.tags.includes(tag)
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Owner Filter */}
-          <div>
-            <label htmlFor="filter-owner" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Owner
-            </label>
-            <select
-              id="filter-owner"
-              value={filters.owner}
-              onChange={(e) => handleFilterChange('owner', e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="">All Owners</option>
-              {availableOwners.map(owner => (
-                <option key={owner} value={owner}>
-                  {owner}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Budget Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Budget Range
-            </label>
-            <select
-              value={filters.budget}
-              onChange={(e) => handleFilterChange('budget', e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              {budgetOptions.map(budget => (
-                <option key={budget.value} value={budget.value}>
-                  {budget.label}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
 

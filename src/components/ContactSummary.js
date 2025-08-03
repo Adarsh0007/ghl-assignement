@@ -210,16 +210,18 @@ const ContactSummary = ({
       <OwnerSelector
         isOpen={isOwnerSelectorOpen}
         onClose={handleCloseOwnerSelector}
-        onSelect={handleOwnerSelect}
+        onOwnerSelect={handleOwnerSelect}
         currentOwner={contact.owner}
+        contactName={`${contact.firstName} ${contact.lastName}`}
       />
 
       {/* Follower Selector Modal */}
       <FollowerSelector
         isOpen={isFollowerSelectorOpen}
         onClose={handleCloseFollowerSelector}
-        onSelect={handleFollowersSelect}
+        onFollowersSelect={handleFollowersSelect}
         currentFollowers={contact.followers}
+        contactName={`${contact.firstName} ${contact.lastName}`}
       />
     </section>
   );
