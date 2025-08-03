@@ -33,7 +33,8 @@ const FollowerSelector = ({
   // Handle save
   const handleSave = useCallback(() => {
     if (onFollowersSelect) {
-      onFollowersSelect(Array.from(selectedFollowers));
+      const followersArray = Array.from(selectedFollowers);
+      onFollowersSelect(followersArray);
     }
     onClose();
   }, [selectedFollowers, onFollowersSelect, onClose]);

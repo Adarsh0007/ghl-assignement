@@ -14,7 +14,7 @@ const Tabs = ({ tabs, activeTab, onTabChange }) => {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-t-lg shadow-sm"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t border-gray-200 dark:border-gray-700 rounded-t-lg shadow-sm"
       role="tablist"
       aria-label="Contact information tabs"
     >

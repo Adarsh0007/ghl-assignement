@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowLeft, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext.js';
 
-const Header = ({
+const Header = React.memo(({
   title,
   showNavigation,
   currentContactIndex = 1,
@@ -79,10 +79,10 @@ const Header = ({
                 onClick={handlePrevClick}
                 onKeyDown={(e) => handleKeyDown(e, handlePrevClick)}
                 disabled={isFirstContact}
-                className={`p-1 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
+                className={`p-1 rounded transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                   isFirstContact
                     ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:scale-105'
                 }`}
                 aria-label={isFirstContact ? 'First contact - cannot go back' : `Go to previous contact (${currentContactIndex - 1} of ${totalContacts})`}
                 aria-disabled={isFirstContact}
@@ -94,10 +94,10 @@ const Header = ({
                 onClick={handleNextClick}
                 onKeyDown={(e) => handleKeyDown(e, handleNextClick)}
                 disabled={isLastContact}
-                className={`p-1 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
+                className={`p-1 rounded transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                   isLastContact
                     ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:scale-105'
                 }`}
                 aria-label={isLastContact ? 'Last contact - cannot go forward' : `Go to next contact (${currentContactIndex + 1} of ${totalContacts})`}
                 aria-disabled={isLastContact}
@@ -127,6 +127,8 @@ const Header = ({
       </div>
     </header>
   );
-};
+});
+
+Header.displayName = 'Header';
 
 export default Header; 

@@ -12,7 +12,7 @@ import CountrySelector from './CountrySelector.js';
 import ErrorMessage from './ErrorMessage.js';
 import { DynamicFieldService } from '../services/dynamicFieldService.js';
 
-const ContactDetails = () => {
+const ContactDetails = ({ onContactChange }) => {
   const [layoutConfig, setLayoutConfig] = useState(null);
   const [contactFieldsConfig, setContactFieldsConfig] = useState(null);
   const [allContacts, setAllContacts] = useState([]);
@@ -39,6 +39,14 @@ const ContactDetails = () => {
   const [pendingNavigation, setPendingNavigation] = useState(null);
 
   // All hooks must be called before any conditional returns
+  
+  // Notify parent component when contact data changes
+  useEffect(() => {
+    if (onContactChange && contactData) {
+      onContactChange(contactData);
+    }
+  }, [contactData, onContactChange]);
+
   const handleFieldChange = useCallback(async (key, value) => {
     if (!contactData || !allContacts) return;
     
@@ -406,7 +414,7 @@ const ContactDetails = () => {
       case 'header':
         return (
           <Header
-            key={section.id}
+            key={`header-${currentContactIndex}`}
             title={section.title || 'Contact Details'}
             showNavigation={section.showNavigation || false}
             currentContactIndex={currentContactIndex + 1}
@@ -570,11 +578,24 @@ const ContactDetails = () => {
         setLoading(true);
         setError(null);
         
-        const [layout, fields, contacts] = await Promise.all([
-          ApiService.fetchLayoutConfig(),
-          ApiService.fetchContactFieldsConfig(),
-          ApiService.fetchContactData()
-        ]);
+        // Get localStorage service
+        const { localStorageService } = await import('../services/localStorageService.js');
+        
+        // Try to initialize data directly
+        const initSuccess = await localStorageService.initializeData();
+        
+        if (!initSuccess) {
+          throw new Error('Failed to initialize data from JSON files');
+        }
+        
+        // Now fetch the data
+        const layout = await ApiService.fetchLayoutConfig();
+        const fields = await ApiService.fetchContactFieldsConfig();
+        const contacts = await ApiService.fetchContactData();
+        
+        if (!layout || !fields || !contacts) {
+          throw new Error('Failed to load one or more required data files');
+        }
         
         setLayoutConfig(layout);
         setContactFieldsConfig(fields);
@@ -584,9 +605,14 @@ const ContactDetails = () => {
         if (contacts && contacts.length > 0) {
           setContactData(contacts[0]);
           setCurrentContactIndex(0);
+        } else {
+          throw new Error('No contact data found');
         }
       } catch (err) {
+        console.error('Error loading data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load data');
+        // Re-throw error so ErrorBoundary can catch if not handled by state
+        throw err;
       } finally {
         setLoading(false);
       }
@@ -597,7 +623,7 @@ const ContactDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="h-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">Loading contact details...</p>
@@ -608,21 +634,42 @@ const ContactDetails = () => {
 
   if (error || !layoutConfig || !contactFieldsConfig || !contactData) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+      <div className="h-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <ErrorMessage 
             error={error || 'Failed to load contact data'} 
-            title="Loading Error"
+            title="Data Loading Error"
             variant="error"
             showIcon={true}
             className="mb-4"
           />
-          <div className="text-center">
+          <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-4">
+            <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+              Troubleshooting Steps:
+            </h3>
+            <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+              <li>• Ensure all JSON files are in the correct location</li>
+              <li>• Check that the server is running properly</li>
+              <li>• Verify file permissions and accessibility</li>
+              <li>• Clear browser cache and reload the page</li>
+            </ul>
+          </div>
+          <div className="text-center space-y-2">
             <button 
               onClick={() => window.location.reload()} 
               className="btn-primary"
             >
               Retry
+            </button>
+            <button 
+              onClick={() => {
+                const { localStorageService } = require('../services/localStorageService.js');
+                localStorageService.clearAllData();
+                window.location.reload();
+              }}
+              className="btn-secondary ml-2"
+            >
+              Clear Cache & Retry
             </button>
           </div>
         </div>
@@ -631,9 +678,9 @@ const ContactDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
       <div className="h-full">
-        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden h-full mx-2 lg:mx-0">
+        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-y-auto h-full mx-2 lg:mx-0 scroll-smooth">
           {sections}
         </div>
       </div>

@@ -5,23 +5,7 @@ export class FilterService {
     if (!filters || Object.keys(filters).length === 0) return contacts;
 
     return contacts.filter(contact => {
-      // Filter by tags
-      if (filters.tags && filters.tags.length > 0) {
-        const contactTags = contact.tags || [];
-        const hasMatchingTag = filters.tags.some(tag => contactTags.includes(tag));
-        if (!hasMatchingTag) return false;
-      }
-
-      // Filter by owner
-      if (filters.owner && filters.owner.trim()) {
-        if (contact.owner !== filters.owner) return false;
-      }
-
-      // Filter by budget
-      if (filters.budget && filters.budget.trim()) {
-        if (contact.budget !== filters.budget) return false;
-      }
-
+      // All contacts pass through since we removed the filtering criteria
       return true;
     });
   }
@@ -105,10 +89,7 @@ export class FilterService {
       required: false,
       editable: false,
       hasValue: false,
-      folder: '',
-      tags: [],
-      budget: '',
-      owner: ''
+      folder: ''
     };
   }
 

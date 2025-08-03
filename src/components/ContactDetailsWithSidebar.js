@@ -4,15 +4,24 @@ import Conversation from './Conversation.js';
 import Notes from './Notes.js';
 
 const ContactDetailsWithSidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState('contact'); // 'contact', 'conversation', 'notes'
-
-  const handleToggleSidebar = useCallback(() => {
-    setIsSidebarOpen(prev => !prev);
-  }, []);
+  const [currentContactData, setCurrentContactData] = useState(null);
+  const [showNotes, setShowNotes] = useState(true); // Show notes by default on desktop
 
   const handleViewChange = useCallback((view) => {
     setActiveView(view);
+  }, []);
+
+  const handleContactChange = useCallback((contactData) => {
+    setCurrentContactData(contactData);
+  }, []);
+
+  const handleToggleNotes = useCallback(() => {
+    setShowNotes(prev => !prev);
+  }, []);
+
+  const handleCloseNotes = useCallback(() => {
+    setShowNotes(false);
   }, []);
 
   return (
@@ -56,42 +65,40 @@ const ContactDetailsWithSidebar = () => {
         activeView === 'contact' ? 'block' : 'hidden'
       } lg:block lg:w-[30%] flex flex-col`}>
         <div className="h-full overflow-y-auto">
-          <ContactDetails />
+          <ContactDetails onContactChange={handleContactChange} />
         </div>
       </div>
 
-      {/* Conversation - Full width on mobile, 50% on desktop */}
+      {/* Conversation - Full width on mobile, 50% on desktop, or 70% when notes are hidden */}
       <div className={`${
         activeView === 'conversation' ? 'block' : 'hidden'
-      } lg:block lg:w-[50%] flex flex-col lg:border-l border-gray-200 dark:border-gray-700`}>
+      } lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700`}>
         <div className="h-full overflow-y-auto">
-          <Conversation contactId="1" contactName="Olivia John" />
+          <Conversation 
+            contactId={currentContactData?.id || 1} 
+            contactName={currentContactData ? `${currentContactData.firstName} ${currentContactData.lastName}` : "Olivia John"}
+            contactData={currentContactData || {}}
+            onToggleNotes={handleToggleNotes}
+            showNotes={showNotes}
+          />
         </div>
       </div>
 
       {/* Notes - Full width on mobile, 20% on desktop */}
       <div className={`${
         activeView === 'notes' ? 'block' : 'hidden'
-      } lg:block lg:w-[20%] flex flex-col lg:border-l border-gray-200 dark:border-gray-700`}>
+      } lg:block lg:w-[20%] flex flex-col lg:border-l border-gray-200 dark:border-gray-700 ${
+        !showNotes ? 'lg:hidden' : ''
+      }`}>
         <div className="h-full overflow-y-auto">
-          <Notes contactId="1" contactName="Olivia John" />
+          <Notes 
+            contactId={currentContactData?.id || 1} 
+            contactName={currentContactData ? `${currentContactData.firstName} ${currentContactData.lastName}` : "Olivia John"}
+            contactData={currentContactData || {}}
+            onClose={handleCloseNotes}
+          />
         </div>
       </div>
-
-      {/* Desktop Sidebar Toggle Button (when closed) */}
-      {!isSidebarOpen && (
-        <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2">
-          <button
-            onClick={handleToggleSidebar}
-            className="p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors"
-            aria-label="Open sidebar"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      )}
     </div>
   );
 };
