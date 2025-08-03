@@ -54,28 +54,28 @@ const FolderRenderer = ({
   }
 
   return (
-    <div className="card mb-4">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+      <div className="p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{folder.name}</h3>
+          <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
           <div className="flex items-center space-x-2">
             {folder.showAddButton && (
               <button 
                 onClick={handleAddField}
-                className="inline-flex items-center text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                className="inline-flex items-center text-xs lg:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
               >
-                <Plus className="w-4 h-4 mr-1" />
-                {folder.addButtonText || 'Add'}
+                <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
+                <span className="hidden sm:inline">{folder.addButtonText || 'Add'}</span>
               </button>
             )}
             <button
               onClick={handleToggleExpansion}
-              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
             >
               {isExpanded ? (
-                <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                <ChevronUp className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 dark:text-gray-400" />
               )}
             </button>
           </div>
@@ -83,7 +83,7 @@ const FolderRenderer = ({
       </div>
       
       {isExpanded && (
-        <div className="p-4">
+        <div className="p-3 lg:p-4 bg-white dark:bg-gray-800">
           {filteredFields.map((field) => (
             <FieldRenderer
               key={field.key}
