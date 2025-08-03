@@ -6,6 +6,7 @@ A modern, config-driven React application that renders a dynamic Contact Details
 
 - **[Project Wiki](PROJECT_WIKI.md)** - Comprehensive architecture and technical details
 - **[Performance Optimizations](PERFORMANCE_OPTIMIZATIONS.md)** - Detailed performance improvements
+- **[Production Optimizations](PRODUCTION_OPTIMIZATIONS.md)** - Production build optimizations and deployment
 - **[Virtualized Lists Guide](src/components/globalComponents/VIRTUALIZED_LIST_README.md)** - Virtualization implementation
 
 ## 🎯 Core Features
@@ -147,6 +148,13 @@ ghl-assignment/
 - **Responsive Design**: Mobile-first approach
 - **Code Organization**: Clear separation of concerns
 
+### **Production Optimizations**
+- **Bundle Optimization**: Code splitting, tree shaking, and minification
+- **Compression**: Gzip and Brotli compression for all assets
+- **Service Worker**: Offline support and intelligent caching
+- **Performance Headers**: Security and caching headers
+- **Asset Optimization**: Post-build optimization and analysis
+
 ## 🎯 Advanced Features
 
 ### **Virtualized Lists System**
@@ -263,19 +271,23 @@ npm start
 
 ### **Available Scripts**
 ```bash
-npm start          # Start development server
-npm run build      # Build for production
-npm test           # Run test suite
-npm run eject      # Eject from Create React App
+npm start              # Start development server
+npm run build          # Build for production
+npm run build:prod     # Production build with optimizations
+npm run build:optimized # Optimized build with asset optimization
+npm run analyze        # Bundle analysis and optimization report
+npm test               # Run test suite
+npm run eject          # Eject from Create React App
 ```
 
 ## 📊 Performance Metrics
 
 ### **Bundle Analysis**
-- **Main Bundle**: 60.5 kB (gzipped)
-- **CSS Bundle**: 8.88 kB (gzipped)
-- **Code Splitting**: Multiple chunks for optimal loading
+- **Main Bundle**: 60.62 kB (gzipped)
+- **Total Build Size**: 563.81 KB (optimized)
+- **Code Splitting**: 30+ chunks for optimal loading
 - **Tree Shaking**: 40% reduction in bundle size
+- **Compression**: Gzip and Brotli compression enabled
 
 ### **Runtime Performance**
 - **Initial Load**: < 2 seconds
