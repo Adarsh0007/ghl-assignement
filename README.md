@@ -4,7 +4,7 @@ A modern, config-driven React application that renders a dynamic Contact Details
 
 ## 📚 Documentation
 
-- **[Project Wiki]([PROJECT_WIKI.md](https://github.com/Adarsh0007/ghl-assignement/wiki/Dynamic-Contact-Details-%E2%80%90-Complete-Project-Wiki))** - Comprehensive architecture and technical details
+- **[Project Wiki](https://github.com/Adarsh0007/ghl-assignement/wiki/Dynamic-Contact-Details-%E2%80%90-Complete-Project-Wiki)** - Comprehensive architecture and technical details
 - **[Performance Optimizations](PERFORMANCE_OPTIMIZATIONS.md)** - Detailed performance improvements
 - **[Production Optimizations](PRODUCTION_OPTIMIZATIONS.md)** - Production build optimizations and deployment
 - **[Virtualized Lists Guide](src/components/globalComponents/VIRTUALIZED_LIST_README.md)** - Virtualization implementation
