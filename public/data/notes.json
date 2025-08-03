@@ -2,228 +2,703 @@
   "1": [
     {
       "id": 1001,
-      "content": "Initial contact with Testfdds User. Customer showed interest in Toyota, Honda, Ford, BMW. Budget range: $20k-$30k.",
-      "timestamp": "2024-01-15T10:00:00Z",
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-04-13T06:10:51.056Z",
       "author": "Alex Johnson",
-      "conversationId": 101
+      "conversationId": 104
     },
     {
       "id": 1002,
-      "content": "Budget range discussed: $20k-$30k. Customer seems serious about purchasing. Interested in fuel-efficient vehicles.",
-      "timestamp": "2024-01-15T11:30:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 101
+      "content": "Price negotiation in progress. Customer is looking for best value on Hyundai Optima.",
+      "timestamp": "2025-07-06T09:54:39.123Z",
+      "author": "David Chen",
+      "conversationId": 107
     },
     {
       "id": 1003,
-      "content": "Follow up scheduled for next week. Customer wants to compare options before making decision.",
-      "timestamp": "2024-01-15T12:00:00Z",
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Toyota.",
+      "timestamp": "2025-05-31T00:37:45.769Z",
       "author": "Alex Johnson",
-      "conversationId": 101
+      "conversationId": 102
     },
     {
       "id": 1004,
-      "content": "Customer mentioned they have a trade-in vehicle. Need to get appraisal details.",
-      "timestamp": "2024-01-14T15:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 102
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-06-29T20:58:51.601Z",
+      "author": "Sarah Wilson",
+      "conversationId": 104
     },
     {
       "id": 1005,
-      "content": "Discussed financing options. Customer prefers monthly payments over lease.",
-      "timestamp": "2024-01-14T16:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 102
+      "content": "Test drive completed for Kia Optima. Customer was impressed with performance.",
+      "timestamp": "2025-04-23T07:42:55.423Z",
+      "author": "Mike Davis",
+      "conversationId": 103
     },
     {
       "id": 1006,
-      "content": "Customer asked about warranty coverage and maintenance packages.",
-      "timestamp": "2024-01-13T10:00:00Z",
+      "content": "Test drive completed for Ford Civic. Customer was impressed with performance.",
+      "timestamp": "2025-05-17T01:18:08.027Z",
+      "author": "Mike Davis",
+      "conversationId": 101
+    },
+    {
+      "id": 1007,
+      "content": "Trade-in appraisal completed. Customer has a 2024 Tesla ES in good condition.",
+      "timestamp": "2025-06-14T21:13:39.821Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 100
+    },
+    {
+      "id": 1008,
+      "content": "Customer compared Toyota with competitors. Toyota came out ahead in features.",
+      "timestamp": "2025-07-26T06:56:34.928Z",
+      "author": "Alex Johnson",
+      "conversationId": 107
+    },
+    {
+      "id": 1009,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-07-07T20:03:57.400Z",
+      "author": "Sarah Wilson",
+      "conversationId": 101
+    },
+    {
+      "id": 1010,
+      "content": "Follow up scheduled for next week. Customer wants to compare Lexus options.",
+      "timestamp": "2025-05-13T20:38:31.888Z",
+      "author": "Sarah Wilson",
+      "conversationId": 100
+    },
+    {
+      "id": 1011,
+      "content": "Trade-in appraisal completed. Customer has a 2022 Audi Civic in good condition.",
+      "timestamp": "2025-07-11T05:05:31.719Z",
+      "author": "Mike Davis",
+      "conversationId": 104
+    },
+    {
+      "id": 1012,
+      "content": "Test drive completed for Honda ES. Customer was impressed with performance.",
+      "timestamp": "2025-07-22T13:32:35.984Z",
+      "author": "David Chen",
+      "conversationId": 100
+    },
+    {
+      "id": 1013,
+      "content": "Test drive completed for Mercedes Camry. Customer was impressed with performance.",
+      "timestamp": "2025-07-02T18:20:49.193Z",
+      "author": "Alex Johnson",
+      "conversationId": 105
+    },
+    {
+      "id": 1014,
+      "content": "Price negotiation in progress. Customer is looking for best value on Mercedes C-Class.",
+      "timestamp": "2025-07-19T18:41:13.287Z",
       "author": "Alex Johnson",
       "conversationId": 103
     },
     {
-      "id": 1007,
-      "content": "Test drive scheduled for this weekend. Customer excited about the Toyota Camry.",
-      "timestamp": "2024-01-13T11:00:00Z",
+      "id": 1015,
+      "content": "Trade-in appraisal completed. Customer has a 2021 Hyundai Sonata in good condition.",
+      "timestamp": "2025-04-30T05:12:35.842Z",
+      "author": "Mike Davis",
+      "conversationId": 107
+    },
+    {
+      "id": 1016,
+      "content": "Test drive completed for Honda A4. Customer was impressed with performance.",
+      "timestamp": "2025-05-31T02:36:58.968Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1017,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-05-08T21:30:52.895Z",
+      "author": "Sarah Wilson",
+      "conversationId": 106
+    },
+    {
+      "id": 1018,
+      "content": "Price negotiation in progress. Customer is looking for best value on Kia Camry.",
+      "timestamp": "2025-07-05T11:22:31.869Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 107
+    },
+    {
+      "id": 1019,
+      "content": "Test drive completed for Hyundai Model 3. Customer was impressed with performance.",
+      "timestamp": "2025-05-21T06:15:49.132Z",
+      "author": "David Chen",
+      "conversationId": 106
+    },
+    {
+      "id": 1020,
+      "content": "Customer compared Ford with competitors. Ford came out ahead in features.",
+      "timestamp": "2025-05-29T17:22:33.995Z",
+      "author": "Sarah Wilson",
+      "conversationId": 101
+    },
+    {
+      "id": 1021,
+      "content": "Customer showed interest in Ford vehicles. Budget range: $39k-${budget + 10}k.",
+      "timestamp": "2025-05-29T16:06:10.810Z",
+      "author": "David Chen",
+      "conversationId": 103
+    },
+    {
+      "id": 1022,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-05-18T05:48:03.941Z",
+      "author": "David Chen",
+      "conversationId": 108
+    },
+    {
+      "id": 1023,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-05-08T16:03:42.458Z",
+      "author": "Sarah Wilson",
+      "conversationId": 101
+    },
+    {
+      "id": 1024,
+      "content": "Price negotiation in progress. Customer is looking for best value on Ford Sonata.",
+      "timestamp": "2025-04-23T16:30:25.848Z",
+      "author": "Alex Johnson",
+      "conversationId": 107
+    },
+    {
+      "id": 1025,
+      "content": "Trade-in appraisal completed. Customer has a 2021 Honda Sonata in good condition.",
+      "timestamp": "2025-08-03T13:58:23.861Z",
+      "author": "Sarah Wilson",
+      "conversationId": 109
+    },
+    {
+      "id": 1026,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-05-10T15:25:53.235Z",
+      "author": "Mike Davis",
+      "conversationId": 106
+    },
+    {
+      "id": 1027,
+      "content": "Trade-in appraisal completed. Customer has a 2020 Mercedes Model 3 in good condition.",
+      "timestamp": "2025-05-24T13:38:32.006Z",
+      "author": "David Chen",
+      "conversationId": 104
+    },
+    {
+      "id": 1028,
+      "content": "Insurance quote provided for Mercedes Model 3. Customer satisfied with rates.",
+      "timestamp": "2025-06-04T13:25:00.161Z",
+      "author": "Mike Davis",
+      "conversationId": 101
+    },
+    {
+      "id": 1029,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Mercedes.",
+      "timestamp": "2025-05-21T15:23:54.109Z",
+      "author": "Mike Davis",
+      "conversationId": 102
+    },
+    {
+      "id": 1030,
+      "content": "Test drive completed for BMW A4. Customer was impressed with performance.",
+      "timestamp": "2025-07-25T08:20:04.759Z",
+      "author": "Mike Davis",
+      "conversationId": 104
+    },
+    {
+      "id": 1031,
+      "content": "Follow up scheduled for next week. Customer wants to compare Mercedes options.",
+      "timestamp": "2025-06-25T09:52:40.397Z",
+      "author": "Sarah Wilson",
+      "conversationId": 106
+    },
+    {
+      "id": 1032,
+      "content": "Price negotiation in progress. Customer is looking for best value on Tesla Sonata.",
+      "timestamp": "2025-05-08T16:26:36.010Z",
+      "author": "Mike Davis",
+      "conversationId": 106
+    },
+    {
+      "id": 1033,
+      "content": "Insurance quote provided for BMW F-150. Customer satisfied with rates.",
+      "timestamp": "2025-04-26T14:23:57.307Z",
+      "author": "Alex Johnson",
+      "conversationId": 106
+    },
+    {
+      "id": 1034,
+      "content": "Follow up scheduled for next week. Customer wants to compare Hyundai options.",
+      "timestamp": "2025-05-05T05:21:19.432Z",
+      "author": "David Chen",
+      "conversationId": 106
+    },
+    {
+      "id": 1035,
+      "content": "Follow up scheduled for next week. Customer wants to compare Ford options.",
+      "timestamp": "2025-06-02T03:13:18.296Z",
+      "author": "Alex Johnson",
+      "conversationId": 105
+    },
+    {
+      "id": 1036,
+      "content": "Insurance quote provided for Mercedes A4. Customer satisfied with rates.",
+      "timestamp": "2025-05-20T14:37:33.600Z",
+      "author": "David Chen",
+      "conversationId": 107
+    },
+    {
+      "id": 1037,
+      "content": "Follow up scheduled for next week. Customer wants to compare Ford options.",
+      "timestamp": "2025-07-11T12:54:38.843Z",
+      "author": "David Chen",
+      "conversationId": 105
+    },
+    {
+      "id": 1038,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-07-13T21:45:05.983Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 106
+    },
+    {
+      "id": 1039,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-06-08T18:11:50.191Z",
+      "author": "David Chen",
+      "conversationId": 107
+    },
+    {
+      "id": 1040,
+      "content": "Insurance quote provided for Lexus A4. Customer satisfied with rates.",
+      "timestamp": "2025-05-17T06:40:27.557Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 100
+    },
+    {
+      "id": 1041,
+      "content": "Customer asked about warranty coverage and maintenance packages for Kia.",
+      "timestamp": "2025-06-05T13:51:55.084Z",
+      "author": "Mike Davis",
+      "conversationId": 105
+    },
+    {
+      "id": 1042,
+      "content": "Trade-in appraisal completed. Customer has a 2015 Audi A4 in good condition.",
+      "timestamp": "2025-07-14T21:08:20.562Z",
+      "author": "Sarah Wilson",
+      "conversationId": 100
+    },
+    {
+      "id": 1043,
+      "content": "Test drive completed for Tesla ES. Customer was impressed with performance.",
+      "timestamp": "2025-07-04T09:16:23.700Z",
+      "author": "Alex Johnson",
+      "conversationId": 108
+    },
+    {
+      "id": 1044,
+      "content": "Price negotiation in progress. Customer is looking for best value on BMW 3 Series.",
+      "timestamp": "2025-05-20T07:29:21.879Z",
+      "author": "David Chen",
+      "conversationId": 104
+    },
+    {
+      "id": 1045,
+      "content": "Price negotiation in progress. Customer is looking for best value on Tesla 3 Series.",
+      "timestamp": "2025-07-05T08:02:55.050Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 105
+    },
+    {
+      "id": 1046,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-06-20T05:27:02.774Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 101
+    },
+    {
+      "id": 1047,
+      "content": "Customer showed interest in Lexus vehicles. Budget range: $24k-${budget + 10}k.",
+      "timestamp": "2025-05-20T21:31:03.905Z",
+      "author": "Alex Johnson",
+      "conversationId": 108
+    },
+    {
+      "id": 1048,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Tesla.",
+      "timestamp": "2025-07-10T18:56:36.349Z",
+      "author": "Alex Johnson",
+      "conversationId": 104
+    },
+    {
+      "id": 1049,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-04-11T17:04:53.593Z",
+      "author": "David Chen",
+      "conversationId": 104
+    },
+    {
+      "id": 1050,
+      "content": "Test drive completed for Hyundai Sonata. Customer was impressed with performance.",
+      "timestamp": "2025-06-07T05:59:00.141Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1051,
+      "content": "Customer asked about warranty coverage and maintenance packages for Hyundai.",
+      "timestamp": "2025-07-04T10:59:52.986Z",
+      "author": "David Chen",
+      "conversationId": 106
+    },
+    {
+      "id": 1052,
+      "content": "Insurance quote provided for BMW 3 Series. Customer satisfied with rates.",
+      "timestamp": "2025-07-05T15:05:35.611Z",
+      "author": "Mike Davis",
+      "conversationId": 103
+    },
+    {
+      "id": 1053,
+      "content": "Customer asked about warranty coverage and maintenance packages for Lexus.",
+      "timestamp": "2025-04-17T08:50:57.596Z",
+      "author": "Alex Johnson",
+      "conversationId": 101
+    },
+    {
+      "id": 1054,
+      "content": "Insurance quote provided for Honda Civic. Customer satisfied with rates.",
+      "timestamp": "2025-06-25T23:38:02.040Z",
+      "author": "Mike Davis",
+      "conversationId": 107
+    },
+    {
+      "id": 1055,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Ford.",
+      "timestamp": "2025-04-29T07:04:01.669Z",
+      "author": "David Chen",
+      "conversationId": 106
+    },
+    {
+      "id": 1056,
+      "content": "Customer asked about warranty coverage and maintenance packages for Mercedes.",
+      "timestamp": "2025-08-01T02:44:48.636Z",
+      "author": "David Chen",
+      "conversationId": 108
+    },
+    {
+      "id": 1057,
+      "content": "Test drive completed for Honda Camry. Customer was impressed with performance.",
+      "timestamp": "2025-05-29T09:27:13.103Z",
+      "author": "Mike Davis",
+      "conversationId": 107
+    },
+    {
+      "id": 1058,
+      "content": "Customer showed interest in Lexus vehicles. Budget range: $36k-${budget + 10}k.",
+      "timestamp": "2025-04-29T11:10:42.756Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 109
+    },
+    {
+      "id": 1059,
+      "content": "Insurance quote provided for Honda Sonata. Customer satisfied with rates.",
+      "timestamp": "2025-05-07T05:13:35.905Z",
+      "author": "David Chen",
+      "conversationId": 107
+    },
+    {
+      "id": 1060,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-04-12T10:08:35.864Z",
+      "author": "Alex Johnson",
+      "conversationId": 107
+    },
+    {
+      "id": 1061,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Audi.",
+      "timestamp": "2025-05-14T15:17:34.440Z",
+      "author": "Mike Davis",
+      "conversationId": 100
+    },
+    {
+      "id": 1062,
+      "content": "Customer compared Hyundai with competitors. Hyundai came out ahead in features.",
+      "timestamp": "2025-05-28T23:53:55.851Z",
+      "author": "Sarah Wilson",
+      "conversationId": 105
+    },
+    {
+      "id": 1063,
+      "content": "Follow up scheduled for next week. Customer wants to compare Lexus options.",
+      "timestamp": "2025-06-13T11:21:13.842Z",
+      "author": "Sarah Wilson",
+      "conversationId": 100
+    },
+    {
+      "id": 1064,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Mercedes.",
+      "timestamp": "2025-04-17T21:25:16.179Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 106
+    },
+    {
+      "id": 1065,
+      "content": "Trade-in appraisal completed. Customer has a 2024 Mercedes Optima in good condition.",
+      "timestamp": "2025-07-10T12:26:45.295Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 100
+    },
+    {
+      "id": 1066,
+      "content": "Customer compared BMW with competitors. BMW came out ahead in features.",
+      "timestamp": "2025-07-07T11:16:03.194Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 102
+    },
+    {
+      "id": 1067,
+      "content": "Customer showed interest in Tesla vehicles. Budget range: $48k-${budget + 10}k.",
+      "timestamp": "2025-06-27T16:26:54.551Z",
+      "author": "Alex Johnson",
+      "conversationId": 101
+    },
+    {
+      "id": 1068,
+      "content": "Follow up scheduled for next week. Customer wants to compare Hyundai options.",
+      "timestamp": "2025-06-28T03:01:42.166Z",
+      "author": "Sarah Wilson",
+      "conversationId": 100
+    },
+    {
+      "id": 1069,
+      "content": "Price negotiation in progress. Customer is looking for best value on Mercedes Civic.",
+      "timestamp": "2025-06-15T23:37:11.115Z",
+      "author": "Mike Davis",
+      "conversationId": 100
+    },
+    {
+      "id": 1070,
+      "content": "Customer compared Toyota with competitors. Toyota came out ahead in features.",
+      "timestamp": "2025-05-07T09:53:12.767Z",
+      "author": "Alex Johnson",
+      "conversationId": 109
+    },
+    {
+      "id": 1071,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Mercedes.",
+      "timestamp": "2025-05-08T18:06:50.368Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 105
+    },
+    {
+      "id": 1072,
+      "content": "Customer asked about warranty coverage and maintenance packages for Toyota.",
+      "timestamp": "2025-06-12T06:34:34.383Z",
+      "author": "David Chen",
+      "conversationId": 108
+    },
+    {
+      "id": 1073,
+      "content": "Customer compared Ford with competitors. Ford came out ahead in features.",
+      "timestamp": "2025-05-29T10:27:36.044Z",
+      "author": "Mike Davis",
+      "conversationId": 107
+    },
+    {
+      "id": 1074,
+      "content": "Price negotiation in progress. Customer is looking for best value on Honda ES.",
+      "timestamp": "2025-05-08T19:30:51.034Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 100
+    },
+    {
+      "id": 1075,
+      "content": "Trade-in appraisal completed. Customer has a 2020 Hyundai Civic in good condition.",
+      "timestamp": "2025-06-24T09:59:39.336Z",
+      "author": "Sarah Wilson",
+      "conversationId": 106
+    },
+    {
+      "id": 1076,
+      "content": "Follow up scheduled for next week. Customer wants to compare Kia options.",
+      "timestamp": "2025-07-04T23:24:46.506Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1077,
+      "content": "Test drive completed for Honda Sonata. Customer was impressed with performance.",
+      "timestamp": "2025-06-29T16:33:00.731Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 103
+    },
+    {
+      "id": 1078,
+      "content": "Customer asked about warranty coverage and maintenance packages for BMW.",
+      "timestamp": "2025-08-01T03:44:09.570Z",
+      "author": "David Chen",
+      "conversationId": 100
+    },
+    {
+      "id": 1079,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Toyota.",
+      "timestamp": "2025-06-23T19:45:38.611Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 106
+    },
+    {
+      "id": 1080,
+      "content": "Customer showed interest in Mercedes vehicles. Budget range: $28k-${budget + 10}k.",
+      "timestamp": "2025-04-22T11:41:18.899Z",
+      "author": "Mike Davis",
+      "conversationId": 104
+    },
+    {
+      "id": 1081,
+      "content": "Insurance quote provided for Mercedes Model 3. Customer satisfied with rates.",
+      "timestamp": "2025-05-20T02:17:25.057Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 109
+    },
+    {
+      "id": 1082,
+      "content": "Customer asked about warranty coverage and maintenance packages for Toyota.",
+      "timestamp": "2025-04-27T05:07:16.874Z",
+      "author": "Mike Davis",
+      "conversationId": 100
+    },
+    {
+      "id": 1083,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-05-04T19:13:00.820Z",
+      "author": "Mike Davis",
+      "conversationId": 106
+    },
+    {
+      "id": 1084,
+      "content": "Trade-in appraisal completed. Customer has a 2017 BMW Civic in good condition.",
+      "timestamp": "2025-05-05T23:39:15.361Z",
+      "author": "Mike Davis",
+      "conversationId": 103
+    },
+    {
+      "id": 1085,
+      "content": "Insurance quote provided for Ford 3 Series. Customer satisfied with rates.",
+      "timestamp": "2025-05-11T04:22:55.701Z",
+      "author": "Sarah Wilson",
+      "conversationId": 106
+    },
+    {
+      "id": 1086,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Kia.",
+      "timestamp": "2025-06-28T12:28:48.473Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 105
+    },
+    {
+      "id": 1087,
+      "content": "Customer showed interest in Ford vehicles. Budget range: $32k-${budget + 10}k.",
+      "timestamp": "2025-07-19T15:01:36.521Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1088,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-05-06T11:36:46.877Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 107
+    },
+    {
+      "id": 1089,
+      "content": "Follow up scheduled for next week. Customer wants to compare Mercedes options.",
+      "timestamp": "2025-05-31T13:52:57.889Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 106
+    },
+    {
+      "id": 1090,
+      "content": "Customer showed interest in Hyundai vehicles. Budget range: $46k-${budget + 10}k.",
+      "timestamp": "2025-05-27T16:23:50.685Z",
+      "author": "Alex Johnson",
+      "conversationId": 103
+    },
+    {
+      "id": 1091,
+      "content": "Insurance quote provided for Honda 3 Series. Customer satisfied with rates.",
+      "timestamp": "2025-06-20T03:06:34.466Z",
+      "author": "Sarah Wilson",
+      "conversationId": 102
+    },
+    {
+      "id": 1092,
+      "content": "Discussed financing options with customer. They prefer monthly payments over lease.",
+      "timestamp": "2025-04-21T20:11:18.400Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 105
+    },
+    {
+      "id": 1093,
+      "content": "Customer showed interest in Tesla vehicles. Budget range: $30k-${budget + 10}k.",
+      "timestamp": "2025-04-16T01:14:27.698Z",
+      "author": "Mike Davis",
+      "conversationId": 102
+    },
+    {
+      "id": 1094,
+      "content": "Insurance quote provided for BMW Model 3. Customer satisfied with rates.",
+      "timestamp": "2025-06-03T22:01:08.880Z",
+      "author": "Alex Johnson",
+      "conversationId": 104
+    },
+    {
+      "id": 1095,
+      "content": "Trade-in appraisal completed. Customer has a 2024 Audi 3 Series in good condition.",
+      "timestamp": "2025-07-02T20:20:09.006Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 101
+    },
+    {
+      "id": 1096,
+      "content": "Customer compared BMW with competitors. BMW came out ahead in features.",
+      "timestamp": "2025-07-17T21:29:05.920Z",
+      "author": "Sarah Wilson",
+      "conversationId": 105
+    },
+    {
+      "id": 1097,
+      "content": "Customer asked about warranty coverage and maintenance packages for Audi.",
+      "timestamp": "2025-07-11T06:44:09.562Z",
+      "author": "Sarah Wilson",
+      "conversationId": 109
+    },
+    {
+      "id": 1098,
+      "content": "Insurance quote provided for Honda Model 3. Customer satisfied with rates.",
+      "timestamp": "2025-07-03T01:42:39.984Z",
+      "author": "David Chen",
+      "conversationId": 106
+    },
+    {
+      "id": 1099,
+      "content": "Delivery scheduled for next Friday. Customer excited about their new Hyundai.",
+      "timestamp": "2025-04-14T18:23:10.545Z",
       "author": "Alex Johnson",
       "conversationId": 102
-    }
-  ],
-  "2": [
-    {
-      "id": 2001,
-      "content": "Initial contact with Michael Chen. Customer showed interest in Tesla, BMW. Budget range: $40k-$50k.",
-      "timestamp": "2024-01-15T08:00:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 201
     },
     {
-      "id": 2002,
-      "content": "Customer is tech-savvy and interested in electric vehicles. Looking for advanced technology features.",
-      "timestamp": "2024-01-15T09:00:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 201
-    },
-    {
-      "id": 2003,
-      "content": "Discussed Tesla Model 3 battery range and charging infrastructure.",
-      "timestamp": "2024-01-15T10:00:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 201
-    },
-    {
-      "id": 2004,
-      "content": "Customer interested in Performance version of Tesla Model 3. Need to check availability.",
-      "timestamp": "2024-01-15T11:00:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 201
-    },
-    {
-      "id": 2005,
-      "content": "BMW 3 Series discussion - customer wants to know about driver assistance features.",
-      "timestamp": "2024-01-14T10:30:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 202
-    },
-    {
-      "id": 2006,
-      "content": "Scheduled demo for BMW 3 Series advanced features next week.",
-      "timestamp": "2024-01-14T11:00:00Z",
-      "author": "Sarah Wilson",
-      "conversationId": 202
-    }
-  ],
-  "3": [
-    {
-      "id": 3001,
-      "content": "Initial contact with Emily Rodriguez. Customer showed interest in Audi, Mercedes. Budget range: $30k-$40k.",
-      "timestamp": "2024-01-15T06:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 301
-    },
-    {
-      "id": 3002,
-      "content": "Customer is very design-focused. Interested in luxury styling and comfort features.",
-      "timestamp": "2024-01-15T07:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 301
-    },
-    {
-      "id": 3003,
-      "content": "Discussed Audi A4 color options and interior customization.",
-      "timestamp": "2024-01-15T08:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 301
-    },
-    {
-      "id": 3004,
-      "content": "Customer interested in different wheel options for Audi A4.",
-      "timestamp": "2024-01-15T09:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 301
-    },
-    {
-      "id": 3005,
-      "content": "Mercedes C-Class discussion - customer wants to know about comfort features.",
-      "timestamp": "2024-01-13T15:20:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 302
-    },
-    {
-      "id": 3006,
-      "content": "Customer comparing Mercedes C-Class with Audi A4. Need to provide comparison chart.",
-      "timestamp": "2024-01-13T16:00:00Z",
-      "author": "Alex Johnson",
-      "conversationId": 302
-    }
-  ],
-  "4": [
-    {
-      "id": 4001,
-      "content": "Initial contact with David Thompson. Customer showed interest in Hyundai, Kia. Budget range: $25k-$35k.",
-      "timestamp": "2024-01-15T04:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 401
-    },
-    {
-      "id": 4002,
-      "content": "Customer is environmentally conscious. Focused on fuel efficiency and eco-friendly options.",
-      "timestamp": "2024-01-15T05:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 401
-    },
-    {
-      "id": 4003,
-      "content": "Discussed Hyundai Sonata MPG ratings and fuel efficiency.",
-      "timestamp": "2024-01-15T06:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 401
-    },
-    {
-      "id": 4004,
-      "content": "Customer interested in hybrid and electric options. Need to provide information on available models.",
-      "timestamp": "2024-01-15T07:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 401
-    },
-    {
-      "id": 4005,
-      "content": "Kia K5 vs Hyundai Sonata fuel efficiency comparison requested.",
-      "timestamp": "2024-01-14T12:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 402
-    },
-    {
-      "id": 4006,
-      "content": "Provided EPA ratings comparison. Customer leaning towards Hyundai for better fuel economy.",
-      "timestamp": "2024-01-14T13:00:00Z",
-      "author": "Lisa Brown",
-      "conversationId": 402
-    }
-  ],
-  "5": [
-    {
-      "id": 5001,
-      "content": "Initial contact with Sophia Williams. Customer showed interest in Ford, Chevrolet. Budget range: $20k-$30k.",
-      "timestamp": "2024-01-15T07:00:00Z",
-      "author": "Mark Davis",
-      "conversationId": 501
-    },
-    {
-      "id": 5002,
-      "content": "Customer is business-focused. Looking for reliable vehicles suitable for business use.",
-      "timestamp": "2024-01-15T08:00:00Z",
-      "author": "Mark Davis",
-      "conversationId": 501
-    },
-    {
-      "id": 5003,
-      "content": "Discussed Ford Mustang reliability ratings and business suitability.",
-      "timestamp": "2024-01-15T09:00:00Z",
-      "author": "Mark Davis",
-      "conversationId": 501
-    },
-    {
-      "id": 5004,
-      "content": "Customer interested in warranty coverage for business use. Need to explain business warranty terms.",
-      "timestamp": "2024-01-15T10:00:00Z",
-      "author": "Mark Davis",
-      "conversationId": 501
-    },
-    {
-      "id": 5005,
-      "content": "Chevrolet Malibu fleet discount inquiry.",
-      "timestamp": "2024-01-13T14:30:00Z",
-      "author": "Mark Davis",
-      "conversationId": 502
-    },
-    {
-      "id": 5006,
-      "content": "Provided fleet pricing information. Customer considering multiple vehicles for business fleet.",
-      "timestamp": "2024-01-13T15:00:00Z",
-      "author": "Mark Davis",
-      "conversationId": 502
+      "id": 1100,
+      "content": "Price negotiation in progress. Customer is looking for best value on Kia C-Class.",
+      "timestamp": "2025-07-28T19:14:08.369Z",
+      "author": "Emily Rodriguez",
+      "conversationId": 100
     }
   ]
-} 
+}

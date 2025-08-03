@@ -8,5 +8,8 @@ const ContactDetailsSkeleton = React.lazy(() => import('./ContactDetailsSkeleton
 const ConversationSkeleton = React.lazy(() => import('./ConversationSkeleton.js'));
 const NotesSkeleton = React.lazy(() => import('./NotesSkeleton.js'));
 const FormField = React.lazy(() => import('./FormField.js'));
+const VirtualizedList = React.lazy(() => import('./VirtualizedList.js'));
+const NotesVirtualizedList = React.lazy(() => import('./NotesVirtualizedList.js'));
+const VirtualizedListDemo = React.lazy(() => import('./VirtualizedListDemo.js'));
 
-export { CustomButton, ComponentLoadingFallback, Loading, ContactDetailsSkeleton, ConversationSkeleton, NotesSkeleton, FormField }; 
+export { CustomButton, ComponentLoadingFallback, Loading, ContactDetailsSkeleton, ConversationSkeleton, NotesSkeleton, FormField, VirtualizedList, NotesVirtualizedList, VirtualizedListDemo }; 
