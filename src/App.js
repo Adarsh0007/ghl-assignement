@@ -2,7 +2,6 @@ import React from 'react';
 import ContactDetails from './components/ContactDetails.js';
 import { ThemeProvider } from './context/ThemeContext.js';
 import ErrorBoundary from './components/ErrorBoundary.js';
-import PerformanceMonitor from './components/PerformanceMonitor.js';
 import './App.css';
 
 function App() {
@@ -22,8 +21,6 @@ function App() {
           <main id="main-content" role="main" aria-label="Contact details main content">
             <ContactDetails />
           </main>
-          
-          <PerformanceMonitor />
         </div>
       </ThemeProvider>
     </ErrorBoundary>

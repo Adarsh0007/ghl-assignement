@@ -138,7 +138,7 @@ App
     ├── FilterModal
     ├── CountrySelector
     ├── ErrorMessage
-    └── PerformanceMonitor
+    └── Demo
 ```
 
 ### Component Responsibilities
@@ -577,34 +577,6 @@ COPY --from=builder /app/package*.json ./
 RUN npm ci --only=production
 EXPOSE 3001
 CMD ["node", "server.js"]
-```
-
-### Performance Monitoring
-
-#### Real-Time Metrics
-```javascript
-// Performance monitoring component
-const PerformanceMonitor = () => {
-  const [metrics, setMetrics] = useState({});
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const cacheStats = CacheService.getStats();
-      const apiStats = ApiService.getCacheStats();
-      setMetrics({ cache: cacheStats, api: apiStats });
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
-  return (
-    <div className="performance-monitor">
-      <h3>Performance Metrics</h3>
-      <div>Cache Hit Rate: {metrics.cache?.hitRate}%</div>
-      <div>API Response Time: {metrics.api?.avgResponseTime}ms</div>
-    </div>
-  );
-};
 ```
 
 ## 📊 Performance Metrics
