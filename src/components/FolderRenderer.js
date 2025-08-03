@@ -1,17 +1,13 @@
 import React, { useState, useMemo, useCallback, Suspense } from 'react';
 import { ChevronUp, ChevronDown, Plus } from 'lucide-react';
 
-// Lazy load child components
+// Lazy load components
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 const FieldRenderer = React.lazy(() => import('./FieldRenderer.js'));
 const AddFieldModal = React.lazy(() => import('./AddFieldModal.js'));
-
-// Lazy load CustomButton component
-const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
-
-// Lazy load the generic loading fallback
 const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
 
-// Fallback button component for loading state
+// Button fallback component
 const ButtonFallback = ({ onClick, children, iconClassName, textClassName, ...props }) => (
   <button onClick={onClick} {...props}>
     {children}
@@ -35,38 +31,37 @@ const FolderRenderer = ({
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddFieldModalOpen, setIsAddFieldModalOpen] = useState(false);
 
-  // Use the fields directly since filtering is now handled in parent component
+  // Filter fields based on search term
   const filteredFields = useMemo(() => {
-    return folder.fields;
-  }, [folder.fields]);
+    if (!searchTerm.trim()) return folder.fields || [];
+    
+    return (folder.fields || []).filter(field => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        field.label?.toLowerCase().includes(searchLower) ||
+        field.key?.toLowerCase().includes(searchLower) ||
+        field.description?.toLowerCase().includes(searchLower) ||
+        String(contactData[field.key] || '').toLowerCase().includes(searchLower)
+      );
+    });
+  }, [folder.fields, searchTerm, contactData]);
 
-  // Toggle expansion handler
   const handleToggleExpansion = useCallback(() => {
-    setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+    setIsExpanded(prev => !prev);
+  }, []);
 
-  // Add field handler
   const handleAddField = useCallback(() => {
     setIsAddFieldModalOpen(true);
   }, []);
 
-  // Handle new field creation
-  const handleNewFieldCreated = useCallback((newField) => {
-    if (onAddField) {
-      onAddField(folder.name, newField);
-    }
-    setIsAddFieldModalOpen(false);
-  }, [onAddField, folder.name]);
-
-  // Handle close modal
   const handleCloseAddFieldModal = useCallback(() => {
     setIsAddFieldModalOpen(false);
   }, []);
 
-  // If no fields match the search, don't render the folder
-  if (filteredFields.length === 0) {
-    return null;
-  }
+  const handleNewFieldCreated = useCallback((newField) => {
+    onAddField(folder.name, newField);
+    setIsAddFieldModalOpen(false);
+  }, [onAddField, folder.name]);
 
   return (
     <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -78,25 +73,25 @@ const FolderRenderer = ({
               <Suspense fallback={
                 <ButtonFallback 
                   onClick={handleAddField}
-                  className="inline-flex items-center text-xs lg:text-sm text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors"
+                  className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                   aria-label={folder.addButtonText || 'Add'}
                   title={folder.addButtonText || 'Add'}
                 >
-                  <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                  <span className="hidden sm:inline text-blue-600 dark:text-blue-400 font-medium">{folder.addButtonText || 'Add'}</span>
+                  <Plus className="w-4 h-4" />
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">{folder.addButtonText || 'Add'}</span>
                 </ButtonFallback>
               }>
                 <CustomButton
                   onClick={handleAddField}
                   variant="none"
-                  size="sm"
+                  size="md"
                   icon={Plus}
                   text={folder.addButtonText || 'Add'}
                   aria-label={folder.addButtonText || 'Add'}
                   title={folder.addButtonText || 'Add'}
-                  className="inline-flex items-center text-xs lg:text-sm"
-                  iconClassName="text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500"
-                  textClassName="text-blue-600 dark:text-blue-400 font-medium"
+                  className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                  iconClassName="w-4 h-4"
+                  textClassName="text-gray-500 dark:text-gray-400 font-medium"
                 />
               </Suspense>
             )}

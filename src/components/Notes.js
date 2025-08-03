@@ -168,7 +168,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
           Notes
         </h2>
         <div className="flex items-center space-x-2">
-          <Suspense fallback={<ButtonFallback onClick={() => setIsAddingNote(true)} className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Add new note"><Plus className="w-4 h-4" /><span className="text-blue-600 dark:text-blue-400 font-medium">Add</span></ButtonFallback>}>
+          <Suspense fallback={<ButtonFallback onClick={() => setIsAddingNote(true)} className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Add new note"><Plus className="w-4 h-4" /><span className="text-gray-500 dark:text-gray-400 font-medium">Add</span></ButtonFallback>}>
             <CustomButton
               onClick={() => setIsAddingNote(true)}
               variant="none"
@@ -176,7 +176,9 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
               icon={Plus}
               text="Add"
               aria-label="Add new note"
-              className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium"
+              className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+              iconClassName="w-4 h-4"
+              textClassName="text-gray-500 dark:text-gray-400 font-medium"
             />
           </Suspense>
           <Suspense fallback={<ButtonFallback onClick={handleClose} className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Close notes panel"><X className="w-4 h-4" /></ButtonFallback>}>
