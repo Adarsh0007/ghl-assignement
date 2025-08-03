@@ -4,13 +4,27 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white overflow-hidden;
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
+    /* Remove overflow-hidden to allow mobile scrolling */
   }
   
   html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
+  }
+
+  /* Ensure proper mobile scrolling */
+  @media (max-width: 1023px) {
+    html, body {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    
+    #root {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
   }
 
   /* Custom scrollbar styling */
@@ -55,6 +69,29 @@
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400;
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400;
+  }
+
+  /* Interactive button styles */
+  .btn-interactive {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .btn-interactive:hover {
+    @apply transform scale-105;
+  }
+  
+  .btn-interactive:active {
+    @apply transform scale-95;
+  }
+
+  /* Focus styles */
+  .btn-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+  }
+
+  /* Icon theme styles */
+  .icon-theme-secondary {
+    @apply text-gray-500 dark:text-gray-400;
   }
 }

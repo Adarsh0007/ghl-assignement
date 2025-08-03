@@ -1,6 +1,9 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, Suspense } from 'react';
 import { X, Plus } from 'lucide-react';
 import { DynamicFieldService } from '../services/dynamicFieldService.js';
+
+// Lazy load FormField
+const FormField = React.lazy(() => import('./globalComponents/FormField.js'));
 
 const AddFieldModal = ({ 
   isOpen, 
@@ -99,7 +102,7 @@ const AddFieldModal = ({
            !hasErrors;
   }, [fieldConfig.label, fieldConfig.key, hasErrors]);
 
-  // Handle adding option for select/multiselect
+  // Handle adding new option
   const handleAddOption = useCallback(() => {
     if (newOption.trim() && !fieldConfig.options.includes(newOption.trim())) {
       setFieldConfig(prev => ({
@@ -118,108 +121,42 @@ const AddFieldModal = ({
     }));
   }, []);
 
-  // Validate field configuration
-  const validateConfig = useCallback(() => {
-    const validation = DynamicFieldService.validateFieldConfig(fieldConfig);
-    if (!validation.isValid) {
-      const errorMap = {};
-      validation.errors.forEach(error => {
-        if (error.includes('key')) errorMap.key = error;
-        if (error.includes('label')) errorMap.label = error;
-        if (error.includes('type')) errorMap.type = error;
-        if (error.includes('Options')) errorMap.options = error;
-        if (error.includes('length')) {
-          // Handle length-specific errors
-          if (error.includes('Minimum length')) {
-            errorMap.minLength = error;
-          } else if (error.includes('Maximum length')) {
-            errorMap.maxLength = error;
-          } else if (error.includes('cannot be greater')) {
-            errorMap.minLength = error;
-            errorMap.maxLength = error;
-          } else {
-            errorMap.length = error;
-          }
-        }
-      });
-      setErrors(errorMap);
-      return false;
-    }
-    return true;
-  }, [fieldConfig]);
-
   // Handle save
   const handleSave = useCallback(() => {
-    if (!validateConfig()) return;
-
-    const newField = {
-      ...fieldConfig,
-      minLength: fieldConfig.minLength !== '' ? parseInt(fieldConfig.minLength) : undefined,
-      maxLength: fieldConfig.maxLength !== '' ? parseInt(fieldConfig.maxLength) : undefined
-    };
-
-    onAddField(newField);
-    onClose();
-  }, [fieldConfig, validateConfig, onAddField, onClose]);
+    if (isFormValid) {
+      onAddField(fieldConfig);
+      onClose();
+    }
+  }, [isFormValid, fieldConfig, onAddField, onClose]);
 
   // Handle cancel
   const handleCancel = useCallback(() => {
-    setFieldConfig({
-      key: '',
-      label: '',
-      type: 'text',
-      required: false,
-      editable: true,
-      minLength: '',
-      maxLength: '',
-      options: []
-    });
-    setNewOption('');
-    setErrors({});
     onClose();
-  }, [onClose]);
-
-  // Handle overlay click
-  const handleOverlayClick = useCallback((e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
   }, [onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      onClick={handleOverlayClick}
-    >
-      <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Add New Field
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Add a new field to {folderName}
-            </p>
-          </div>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Add New Field to {folderName}
+          </h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-6">
           <div className="space-y-4">
             {/* Field Label */}
-            <div>
+            <Suspense fallback={<div>
               <label htmlFor="field-label" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Label *
               </label>
@@ -236,10 +173,23 @@ const AddFieldModal = ({
               {errors.label && (
                 <p className="text-sm text-red-500 mt-1">{errors.label}</p>
               )}
-            </div>
+            </div>}>
+              <FormField
+                type="text"
+                name="label"
+                label="Field Label"
+                value={fieldConfig.label}
+                onChange={(value) => handleConfigChange('label', value)}
+                placeholder={suggestedName}
+                required
+                error={errors.label}
+                touched={!!errors.label}
+                className="mb-0"
+              />
+            </Suspense>
 
             {/* Field Key */}
-            <div>
+            <Suspense fallback={<div>
               <label htmlFor="field-key" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Key *
               </label>
@@ -256,10 +206,23 @@ const AddFieldModal = ({
               {errors.key && (
                 <p className="text-sm text-red-500 mt-1">{errors.key}</p>
               )}
-            </div>
+            </div>}>
+              <FormField
+                type="text"
+                name="key"
+                label="Field Key"
+                value={fieldConfig.key}
+                onChange={(value) => handleConfigChange('key', value)}
+                placeholder="auto-generated"
+                required
+                error={errors.key}
+                touched={!!errors.key}
+                className="mb-0"
+              />
+            </Suspense>
 
             {/* Field Type */}
-            <div>
+            <Suspense fallback={<div>
               <label htmlFor="field-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field Type *
               </label>
@@ -275,11 +238,25 @@ const AddFieldModal = ({
                   </option>
                 ))}
               </select>
-            </div>
+            </div>}>
+              <FormField
+                type="select"
+                name="type"
+                label="Field Type"
+                value={fieldConfig.type}
+                onChange={(value) => handleConfigChange('type', value)}
+                options={availableFieldTypes.map(type => ({
+                  value: type.type,
+                  label: `${type.label} - ${type.description}`
+                }))}
+                required
+                className="mb-0"
+              />
+            </Suspense>
 
             {/* Field Properties */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center">
+              <Suspense fallback={<div className="flex items-center">
                 <input
                   type="checkbox"
                   id="required"
@@ -290,8 +267,18 @@ const AddFieldModal = ({
                 <label htmlFor="required" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Required Field
                 </label>
-              </div>
-              <div className="flex items-center">
+              </div>}>
+                <FormField
+                  type="checkbox"
+                  name="required"
+                  label="Required Field"
+                  value={fieldConfig.required ? ['required'] : []}
+                  onChange={(value) => handleConfigChange('required', value.length > 0)}
+                  options={[{ value: 'required', label: 'Required Field' }]}
+                  className="mb-0"
+                />
+              </Suspense>
+              <Suspense fallback={<div className="flex items-center">
                 <input
                   type="checkbox"
                   id="editable"
@@ -302,14 +289,24 @@ const AddFieldModal = ({
                 <label htmlFor="editable" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Editable
                 </label>
-              </div>
+              </div>}>
+                <FormField
+                  type="checkbox"
+                  name="editable"
+                  label="Editable"
+                  value={fieldConfig.editable ? ['editable'] : []}
+                  onChange={(value) => handleConfigChange('editable', value.length > 0)}
+                  options={[{ value: 'editable', label: 'Editable' }]}
+                  className="mb-0"
+                />
+              </Suspense>
             </div>
 
             {/* Length Constraints for Text Fields */}
             {(fieldConfig.type === 'text' || fieldConfig.type === 'textarea') && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
+                  <Suspense fallback={<div>
                     <label htmlFor="field-min-length" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Min Length
                     </label>
@@ -326,8 +323,20 @@ const AddFieldModal = ({
                     {errors.minLength && (
                       <p className="text-sm text-red-500 mt-1">{errors.minLength}</p>
                     )}
-                  </div>
-                  <div>
+                  </div>}>
+                    <FormField
+                      type="number"
+                      name="minLength"
+                      label="Min Length"
+                      value={fieldConfig.minLength}
+                      onChange={(value) => handleConfigChange('minLength', value)}
+                      min={0}
+                      error={errors.minLength}
+                      touched={!!errors.minLength}
+                      className="mb-0"
+                    />
+                  </Suspense>
+                  <Suspense fallback={<div>
                     <label htmlFor="field-max-length" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Max Length
                     </label>
@@ -344,7 +353,19 @@ const AddFieldModal = ({
                     {errors.maxLength && (
                       <p className="text-sm text-red-500 mt-1">{errors.maxLength}</p>
                     )}
-                  </div>
+                  </div>}>
+                    <FormField
+                      type="number"
+                      name="maxLength"
+                      label="Max Length"
+                      value={fieldConfig.maxLength}
+                      onChange={(value) => handleConfigChange('maxLength', value)}
+                      min={1}
+                      error={errors.maxLength}
+                      touched={!!errors.maxLength}
+                      className="mb-0"
+                    />
+                  </Suspense>
                 </div>
                 {errors.length && !errors.minLength && !errors.maxLength && (
                   <p className="text-sm text-red-500">{errors.length}</p>
@@ -355,7 +376,7 @@ const AddFieldModal = ({
             {/* Options for Select/Multiselect */}
             {(fieldConfig.type === 'select' || fieldConfig.type === 'multiselect') && (
               <div>
-                <label htmlFor="field-options" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Options *
                 </label>
                 <div className="space-y-2">
@@ -373,7 +394,7 @@ const AddFieldModal = ({
                     </div>
                   ))}
                   <div className="flex space-x-2">
-                    <input
+                    <Suspense fallback={<input
                       id="field-options"
                       type="text"
                       value={newOption}
@@ -381,7 +402,17 @@ const AddFieldModal = ({
                       placeholder="Add new option"
                       className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       onKeyPress={(e) => e.key === 'Enter' && handleAddOption()}
-                    />
+                    />}>
+                      <FormField
+                        type="text"
+                        name="newOption"
+                        value={newOption}
+                        onChange={(value) => setNewOption(value)}
+                        placeholder="Add new option"
+                        className="flex-1 mb-0"
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddOption()}
+                      />
+                    </Suspense>
                     <button
                       onClick={handleAddOption}
                       disabled={!newOption.trim()}

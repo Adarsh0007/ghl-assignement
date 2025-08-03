@@ -1,5 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { Suspense } from 'react';
 import { Search as SearchIcon, Filter } from 'lucide-react';
+
+// Lazy load components
+const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
+const FormField = React.lazy(() => import('./globalComponents/FormField.js'));
 
 const Search = ({
   placeholder,
@@ -8,10 +12,6 @@ const Search = ({
   showFilter,
   onFilterClick
 }) => {
-  const handleInputChange = useCallback((e) => {
-    onChange(e.target.value);
-  }, [onChange]);
-
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -21,51 +21,85 @@ const Search = ({
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"
       role="search"
       aria-label="Search contacts and fields"
     >
-      <div className="flex items-center">
-        <div className="flex-1 relative">
-          <label htmlFor="search-input" className="sr-only">
-            Search contacts and fields
-          </label>
-          <SearchIcon 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" 
-            aria-hidden="true"
-          />
+      <div className="relative">
+        <label htmlFor="search-input" className="sr-only">
+          Search contacts and fields
+        </label>
+        
+        {/* Search Icon - Left side inside text field */}
+        <SearchIcon 
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10 pointer-events-none" 
+          aria-hidden="true"
+        />
+        
+        <Suspense fallback={
           <input
             id="search-input"
             type="search"
             placeholder={placeholder}
             value={value}
-            onChange={handleInputChange}
-            className={`w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors ${
-              showFilter ? 'pr-12' : 'pr-4'
-            }`}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full pl-6 pr-0 py-2 border-0 focus:outline-none focus:ring-0 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+            style={{ paddingLeft: '1.5rem', paddingTop: '0.5rem', paddingBottom: '0.5rem' }}
             aria-label="Search contacts and fields"
             aria-describedby="search-description"
             autoComplete="off"
             spellCheck="false"
           />
-          
-          {showFilter && (
-            <button
-              onClick={onFilterClick}
-              onKeyDown={(e) => handleKeyDown(e, onFilterClick)}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 dark:focus:ring-offset-gray-700"
-              aria-label="Open advanced filter options"
-              aria-haspopup="dialog"
-              aria-expanded="false"
+        }>
+          <FormField
+            id="search-input"
+            type="text"
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            className="w-full pl-6 pr-0 py-2 focus:outline-none focus:ring-0 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+            style={{ paddingLeft: '1.5rem', paddingTop: '0.5rem', paddingBottom: '0.5rem' }}
+            aria-label="Search contacts and fields"
+            aria-describedby="search-description"
+            autoComplete="off"
+            spellCheck="false"
+            inputClassName="pl-6 pr-0 py-2 border-0 focus:outline-none focus:ring-0 bg-transparent"
+          />
+        </Suspense>
+        
+        {/* Filter Icon - Right side inside text field */}
+        {showFilter && (
+          <Suspense fallback={
+            <button 
+              onClick={onFilterClick} 
+              onKeyDown={(e) => handleKeyDown(e, onFilterClick)} 
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" 
+              aria-label="Open advanced filter options" 
+              aria-haspopup="dialog" 
+              aria-expanded="false" 
               title="Advanced filters"
             >
               <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
             </button>
-          )}
-          
-          <div id="search-description" className="sr-only">
-            Search through contact information, field names, and values
-          </div>
+          }>
+            <CustomButton
+              onClick={onFilterClick}
+              onKeyDown={(e) => handleKeyDown(e, onFilterClick)}
+              icon={Filter}
+              variant="none"
+              size="sm"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Open advanced filter options"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              title="Advanced filters"
+              iconClassName="w-4 h-4 text-gray-500 dark:text-gray-400"
+            />
+          </Suspense>
+        )}
+        
+        <div id="search-description" className="sr-only">
+          Search through contact information, field names, and values
         </div>
       </div>
     </div>

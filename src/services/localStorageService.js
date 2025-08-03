@@ -105,16 +105,19 @@ export class LocalStorageService {
   // Fetch JSON file data
   async fetchJsonFile(path) {
     try {
+      console.log(`📁 Attempting to fetch: ${path}`);
       const response = await fetch(path);
       
       if (!response.ok) {
+        console.error(`❌ Failed to fetch ${path}: ${response.status} ${response.statusText}`);
         throw new Error(`Failed to fetch ${path}: ${response.statusText}`);
       }
       
       const data = await response.json();
+      console.log(`✅ Successfully loaded: ${path}`, data);
       return data;
     } catch (error) {
-      console.error(`Error fetching ${path}:`, error.message);
+      console.error(`❌ Error fetching ${path}:`, error.message);
       
       // Try alternative paths
       const alternativePaths = [
@@ -124,18 +127,26 @@ export class LocalStorageService {
         path.replace('/data/', './data/')
       ];
       
+      console.log(`🔄 Trying alternative paths for ${path}:`, alternativePaths);
+      
       for (const altPath of alternativePaths) {
         try {
+          console.log(`📁 Trying alternative path: ${altPath}`);
           const response = await fetch(altPath);
           if (response.ok) {
             const data = await response.json();
+            console.log(`✅ Successfully loaded from alternative path: ${altPath}`, data);
             return data;
+          } else {
+            console.log(`❌ Alternative path failed: ${altPath} - ${response.status} ${response.statusText}`);
           }
         } catch (altError) {
+          console.log(`❌ Alternative path error: ${altPath} - ${altError.message}`);
           // Continue to next alternative path
         }
       }
       
+      console.error(`❌ All paths failed for: ${path}`);
       return null;
     }
   }

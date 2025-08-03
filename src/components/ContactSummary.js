@@ -1,10 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import { ChevronDown, Phone } from 'lucide-react';
 import { OwnerService } from '../services/ownerService.js';
 import { FollowerService } from '../services/followerService.js';
-import TagManager from './TagManager.js';
-import OwnerSelector from './OwnerSelector.js';
-import FollowerSelector from './FollowerSelector.js';
+
+// Lazy load child components
+const TagManager = React.lazy(() => import('./TagManager.js'));
+const OwnerSelector = React.lazy(() => import('./OwnerSelector.js'));
+const FollowerSelector = React.lazy(() => import('./FollowerSelector.js'));
+
+// Lazy load the generic loading fallback
+const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
 
 const ContactSummary = ({
   contact,
@@ -198,31 +203,37 @@ const ContactSummary = ({
         {/* Tags in their own row */}
         {showTags && (
           <div className="px-4">
-            <TagManager 
-              contactTags={contact.tags || []} 
-              onTagsChange={onTagsChange}
-            />
+            <Suspense fallback={<ComponentLoadingFallback componentName="Tag Manager" size="sm" />}>
+              <TagManager 
+                contactTags={contact.tags || []} 
+                onTagsChange={onTagsChange}
+              />
+            </Suspense>
           </div>
         )}
       </div>
 
       {/* Owner Selector Modal */}
-      <OwnerSelector
-        isOpen={isOwnerSelectorOpen}
-        onClose={handleCloseOwnerSelector}
-        onOwnerSelect={handleOwnerSelect}
-        currentOwner={contact.owner}
-        contactName={`${contact.firstName} ${contact.lastName}`}
-      />
+      <Suspense fallback={<ComponentLoadingFallback componentName="Owner Selector" size="md" />}>
+        <OwnerSelector
+          isOpen={isOwnerSelectorOpen}
+          onClose={handleCloseOwnerSelector}
+          onOwnerSelect={handleOwnerSelect}
+          currentOwner={contact.owner}
+          contactName={`${contact.firstName} ${contact.lastName}`}
+        />
+      </Suspense>
 
       {/* Follower Selector Modal */}
-      <FollowerSelector
-        isOpen={isFollowerSelectorOpen}
-        onClose={handleCloseFollowerSelector}
-        onFollowersSelect={handleFollowersSelect}
-        currentFollowers={contact.followers}
-        contactName={`${contact.firstName} ${contact.lastName}`}
-      />
+      <Suspense fallback={<ComponentLoadingFallback componentName="Follower Selector" size="md" />}>
+        <FollowerSelector
+          isOpen={isFollowerSelectorOpen}
+          onClose={handleCloseFollowerSelector}
+          onFollowersSelect={handleFollowersSelect}
+          currentFollowers={contact.followers}
+          contactName={`${contact.firstName} ${contact.lastName}`}
+        />
+      </Suspense>
     </section>
   );
 };
