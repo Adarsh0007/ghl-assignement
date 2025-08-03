@@ -34,6 +34,53 @@ A modern, config-driven React application that renders a dynamic Contact Details
 - **Inline Editing**: Edit fields directly with save/cancel functionality
 - **Dynamic Field Creation**: Add new fields through modal interface
 
+## ⭐ **Working Functionalities**
+
+### 🎨 **Theme & Persistence**
+- **Dark/Light Theme Persistence**: Theme preference persists on page reload
+- **Local Storage Integration**: All user preferences and data saved locally
+
+### 🔍 **Search & Filtering**
+- **Search Files and Folders**: Real-time search functionality across all contact data
+- **Advanced Filters**: Multiple filter options for refined data search
+- **Dynamic Search Results**: Instant results with debounced input
+
+### 📝 **Dynamic Field Management**
+- **Custom Field Addition**: New fields of required type can be added with validation for specific folders
+- **Field Value Persistence**: All field values can be added/edited and persist on reload
+- **Validation System**: Comprehensive validation for all field types
+- **Custom Field Persistence**: Newly added custom fields persist after data save
+
+### 🌍 **Data Integration**
+- **Country List**: Comprehensive country selection with phone codes
+- **Phone Number List**: International phone number formatting and validation
+- **Data Persistence**: All contact data persists across sessions
+
+### ⚠️ **User Experience & Alerts**
+- **Edit Alert System**: Alert popup when user is editing fields and clicks pagination buttons
+- **Page Navigation**: Seamless navigation from first to last contact
+- **Interactive Feedback**: Console messages for major interactive elements (Call button, Reply/Track buttons)
+
+### 👥 **Contact Management**
+- **Followers & Owners Update**: Contact summary followers and owners can be updated and persist after reload
+- **Tag Management**: Addition of new tags and removal of existing tags with persistence
+- **Contact Organization**: Efficient contact categorization and management
+
+### 💬 **Conversation & Notes System**
+- **Individual Conversations**: Each contact has its own conversation thread
+- **Individual Notes**: Each contact has its own notes section
+- **Static Conversations**: Conversation structure with dynamic data loading
+- **Infinite Loading Notes**: Progressive loading for large note datasets
+- **Notes Visibility Toggle**: Users can show/hide notes from conversations
+- **Note CRUD Operations**: Add, edit, and delete notes with state persistence
+- **Notes Persistence**: All note changes persist after reload
+
+### 🛡️ **Error Handling & Reliability**
+- **Error Boundary**: Comprehensive error boundary implementation
+- **Error Handling**: Robust error handling for fetching and saving data to localStorage
+- **Graceful Degradation**: Fallback mechanisms for failed operations
+- **Data Integrity**: Ensures data consistency across all operations
+
 ## 🏗️ Project Structure
 
 ```
