@@ -218,12 +218,15 @@ const ContactDetails = ({ onContactChange }) => {
       // Save the updated contact to backend
       await ApiService.saveContact(contactData.id, updatedData);
 
-      // Note: In a real application, you would also save the updated configuration to backend
-      console.log('New field added:', newField);
+      // Save the updated field configuration to localStorage
+      await ApiService.saveContactFieldsConfig(updatedConfig);
+
+      console.log('New field added and configuration saved:', newField);
     } catch (error) {
       console.error('Error adding field:', error);
       // Revert changes if save failed
       setContactData(contactData);
+      setContactFieldsConfig(contactFieldsConfig); // Revert field configuration
       throw error;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
