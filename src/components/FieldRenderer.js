@@ -59,11 +59,26 @@ const FieldRenderer = ({
   // Reset edit value when external editing state changes
   useEffect(() => {
     if (!externalIsEditing) {
-      setEditValue(value);
-      setValidationError(null);
-      setSaveError(null);
+      // Use a small delay to ensure state updates are processed in order
+      const timeoutId = setTimeout(() => {
+        setEditValue(value);
+        setValidationError(null);
+        setSaveError(null);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [externalIsEditing, value]);
+
+  // Cleanup effect when field changes
+  useEffect(() => {
+    return () => {
+      // Cleanup when component unmounts or field changes
+      setValidationError(null);
+      setSaveError(null);
+      setIsSaving(false);
+    };
+  }, [field.key]);
 
   // Validate field on value change
   useEffect(() => {
@@ -122,27 +137,39 @@ const FieldRenderer = ({
     }
   }, [editValue, field.type, field.required, field.key, onChange, selectedCountry]);
 
-  const handleCancel = useCallback(() => {
-    setEditValue(value); // Reset to original value
-    setValidationError(null);
-    setSaveError(null);
-    
-    // Notify parent about edit cancel
-    if (onFieldEditCancel) {
-      onFieldEditCancel(field.key);
-    }
-  }, [value, onFieldEditCancel, field.key]);
-
   const handleEdit = useCallback(() => {
-    setEditValue(value);
-    setValidationError(null);
-    setSaveError(null);
+    // Prevent multiple rapid clicks
+    if (isSaving) return;
     
-    // Notify parent about edit start
-    if (onFieldEditStart) {
-      onFieldEditStart(field.key);
-    }
-  }, [value, onFieldEditStart, field.key]);
+    // Add a small delay to prevent race conditions
+    setTimeout(() => {
+      setEditValue(value);
+      setValidationError(null);
+      setSaveError(null);
+      
+      // Notify parent about edit start
+      if (onFieldEditStart) {
+        onFieldEditStart(field.key);
+      }
+    }, 0);
+  }, [value, onFieldEditStart, field.key, isSaving]);
+
+  const handleCancel = useCallback(() => {
+    // Prevent multiple rapid clicks
+    if (isSaving) return;
+    
+    // Add a small delay to prevent race conditions
+    setTimeout(() => {
+      setEditValue(value); // Reset to original value
+      setValidationError(null);
+      setSaveError(null);
+      
+      // Notify parent about edit cancel
+      if (onFieldEditCancel) {
+        onFieldEditCancel(field.key);
+      }
+    }, 0);
+  }, [value, onFieldEditCancel, field.key, isSaving]);
 
   // Phone-specific handlers
   const handleCountrySelect = useCallback((country) => {
@@ -620,7 +647,7 @@ const FieldRenderer = ({
               icon={Edit3}
               aria-label={`Edit ${field.label}`}
               title={`Edit ${field.label}`}
-              className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               iconClassName="w-4 h-4 text-gray-500 dark:text-gray-400"
             />
           </Suspense>
@@ -637,7 +664,7 @@ const FieldRenderer = ({
                 onClick={handleSave}
                 onKeyDown={(e) => handleKeyDown(e, handleSave)}
                 disabled={isSaving || !!validationError}
-                className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
                 title="Save changes"
               >
@@ -648,12 +675,12 @@ const FieldRenderer = ({
                 onClick={handleSave}
                 onKeyDown={(e) => handleKeyDown(e, handleSave)}
                 disabled={isSaving || !!validationError}
-                variant="success"
+                variant="primary"
                 size="sm"
                 text={isSaving ? 'Saving...' : 'Save'}
                 aria-label={isSaving ? 'Saving changes...' : 'Save changes'}
                 title="Save changes"
-                className="px-2 py-1 text-xs"
+                className="px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                 loading={isSaving}
               />
             </Suspense>
@@ -679,7 +706,7 @@ const FieldRenderer = ({
                 text="Cancel"
                 aria-label="Cancel editing"
                 title="Cancel editing"
-                className="px-2 py-1 text-xs"
+                className="px-2 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </Suspense>
           </div>

@@ -56,26 +56,26 @@ const NotesVirtualizedList = ({
     const isEditing = editingNoteId === note.id;
 
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow mb-4">
+      <div className={`bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow ${isEditing ? 'mb-6' : 'mb-4'}`}>
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             {isEditing ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <textarea
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onKeyPress={(e) => handleKeyPress(e, onSaveEdit)}
-                  className="w-full p-2 border border-yellow-300 dark:border-yellow-700 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                  className="w-full p-3 border border-yellow-300 dark:border-yellow-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
                   rows={4}
                   autoFocus
                 />
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-2">
                   <CustomButton
                     onClick={() => setEditingNoteId(null)}
                     text="Cancel"
                     variant="secondary"
                     size="sm"
-                    className="px-2 py-1 text-xs"
+                    className="px-3 py-2 text-sm w-full sm:w-auto"
                   />
                   <CustomButton
                     onClick={onSaveEdit}
@@ -83,20 +83,20 @@ const NotesVirtualizedList = ({
                     text="Save"
                     variant="primary"
                     size="sm"
-                    className="px-2 py-1 text-xs font-medium"
+                    className="px-3 py-2 text-sm font-medium w-full sm:w-auto"
                   />
                 </div>
               </div>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
+                <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed break-words">
                   {note.content}
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2 space-y-1 sm:space-y-0">
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {formatTimestamp ? formatTimestamp(note.timestamp) : 'Just now'}
                   </span>
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center space-x-1 self-end sm:self-auto">
                     <CustomButton
                       onClick={() => onEditNote(note.id, note.content)}
                       variant="none"

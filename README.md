@@ -261,10 +261,10 @@ const fieldConfig = {
 - npm or yarn package manager
 
 ### **Quick Start**
-```bash
+   ```bash
 # Clone the repository
-git clone <repository-url>
-cd ghl-assignment
+   git clone <repository-url>
+   cd ghl-assignment
 
 # Install dependencies
 npm install
@@ -277,7 +277,7 @@ npm start
 ```
 
 ### **Available Scripts**
-```bash
+   ```bash
 npm start              # Start development server
 npm run build          # Build for production
 npm run build:prod     # Production build with optimizations

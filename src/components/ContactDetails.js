@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense, useRef } from 'react';
 import { ApiService } from '../services/api.js';
 import { FilterService } from '../services/filterService.js';
 
@@ -43,8 +43,22 @@ const ContactDetails = ({ onContactChange }) => {
   const [fieldErrors, setFieldErrors] = useState(new Map()); // Map<contactId, Map<fieldKey, error>>
   const [showUnsavedChangesAlert, setShowUnsavedChangesAlert] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState(null);
+  
+  // Ref to track current editing state to prevent race conditions
+  const editingFieldsRef = useRef(new Map());
+  const currentContactIdRef = useRef(null);
 
   // All hooks must be called before any conditional returns
+  
+  // Keep ref in sync with state and handle contact changes
+  useEffect(() => {
+    if (contactData?.id) {
+      currentContactIdRef.current = contactData.id;
+      // Initialize ref with current state
+      const currentEditingFields = editingFields.get(contactData.id) || new Set();
+      editingFieldsRef.current.set(contactData.id, new Set(currentEditingFields));
+    }
+  }, [contactData?.id, editingFields]);
   
   // Notify parent component when contact data changes
   useEffect(() => {
@@ -70,14 +84,23 @@ const ContactDetails = ({ onContactChange }) => {
       
       // Clear unsaved changes flag after successful save
       setHasUnsavedChanges(false);
+      
+      // Update ref and state to remove the field from editing
+      const currentEditingFields = editingFieldsRef.current.get(contactData.id) || new Set();
+      currentEditingFields.delete(key);
+      
+      if (currentEditingFields.size === 0) {
+        editingFieldsRef.current.delete(contactData.id);
+      } else {
+        editingFieldsRef.current.set(contactData.id, currentEditingFields);
+      }
+      
       setEditingFields(prev => {
         const newMap = new Map(prev);
-        const contactEditingFields = newMap.get(contactData.id) || new Set();
-        contactEditingFields.delete(key);
-        if (contactEditingFields.size === 0) {
+        if (currentEditingFields.size === 0) {
           newMap.delete(contactData.id);
         } else {
-          newMap.set(contactData.id, contactEditingFields);
+          newMap.set(contactData.id, new Set(currentEditingFields));
         }
         return newMap;
       });
@@ -297,35 +320,54 @@ const ContactDetails = ({ onContactChange }) => {
   const handleFieldEditStart = useCallback((fieldKey) => {
     if (!contactData?.id) return;
     
+    // Update ref immediately for synchronous access
+    const currentEditingFields = editingFieldsRef.current.get(contactData.id) || new Set();
+    currentEditingFields.add(fieldKey);
+    editingFieldsRef.current.set(contactData.id, currentEditingFields);
+    currentContactIdRef.current = contactData.id;
+    
+    // Update state
     setEditingFields(prev => {
       const newMap = new Map(prev);
-      const contactEditingFields = newMap.get(contactData.id) || new Set();
-      contactEditingFields.add(fieldKey);
+      const contactEditingFields = new Set(currentEditingFields);
       newMap.set(contactData.id, contactEditingFields);
       return newMap;
     });
+    
+    // Always set hasUnsavedChanges to true when starting to edit
     setHasUnsavedChanges(true);
   }, [contactData?.id]);
 
   const handleFieldEditCancel = useCallback((fieldKey) => {
     if (!contactData?.id) return;
     
+    // Update ref immediately for synchronous access
+    const currentEditingFields = editingFieldsRef.current.get(contactData.id) || new Set();
+    currentEditingFields.delete(fieldKey);
+    
+    // Check if this contact still has any editing fields
+    const hasRemainingEditingFields = currentEditingFields.size > 0;
+    
+    if (currentEditingFields.size === 0) {
+      editingFieldsRef.current.delete(contactData.id);
+    } else {
+      editingFieldsRef.current.set(contactData.id, currentEditingFields);
+    }
+    
+    // Update state
     setEditingFields(prev => {
       const newMap = new Map(prev);
-      const contactEditingFields = newMap.get(contactData.id) || new Set();
-      contactEditingFields.delete(fieldKey);
-      if (contactEditingFields.size === 0) {
+      if (currentEditingFields.size === 0) {
         newMap.delete(contactData.id);
       } else {
-        newMap.set(contactData.id, contactEditingFields);
+        newMap.set(contactData.id, new Set(currentEditingFields));
       }
       return newMap;
     });
     
-    // Check if current contact still has unsaved changes
-    const currentContactEditingFields = editingFields.get(contactData.id) || new Set();
-    setHasUnsavedChanges(currentContactEditingFields.size > 1);
-  }, [editingFields, contactData?.id]);
+    // Update hasUnsavedChanges based on the current state
+    setHasUnsavedChanges(hasRemainingEditingFields);
+  }, [contactData?.id]);
 
   const handleFieldError = useCallback((fieldKey, error) => {
     if (!contactData?.id) return;

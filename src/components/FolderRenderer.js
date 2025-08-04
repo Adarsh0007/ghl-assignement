@@ -137,9 +137,9 @@ const FolderRenderer = ({
                 onFieldEditCancel={onFieldEditCancel}
                 onFieldError={onFieldError}
                 onFieldErrorClear={onFieldErrorClear}
-                isEditing={editingFields?.has(field.key) || false}
-                hasError={fieldErrors?.has(field.key) || false}
-                errorMessage={fieldErrors?.get(field.key) || null}
+                isEditing={editingFields && editingFields.has(field.key)}
+                hasError={fieldErrors && fieldErrors.has(field.key)}
+                errorMessage={fieldErrors && fieldErrors.get(field.key)}
               />
             </Suspense>
           ))}
