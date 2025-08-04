@@ -220,14 +220,14 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
               textClassName="text-gray-500 dark:text-gray-400 font-medium"
             />
           </Suspense>
-          <Suspense fallback={<ButtonFallback onClick={onClose} className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Close notes panel"><X className="w-4 h-4" /></ButtonFallback>}>
+          <Suspense fallback={<ButtonFallback onClick={onClose} className="hidden lg:block p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Close notes panel"><X className="w-4 h-4" /></ButtonFallback>}>
             <CustomButton
               onClick={onClose}
               variant="none"
               size="sm"
               icon={X}
               aria-label="Close notes panel"
-              className="p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+              className="hidden lg:block p-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
             />
           </Suspense>
         </div>
