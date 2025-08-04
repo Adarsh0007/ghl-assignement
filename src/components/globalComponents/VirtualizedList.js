@@ -63,7 +63,7 @@ const VirtualizedList = forwardRef(({
     }
 
     return (
-      <div style={style} className="px-4 py-2">
+      <div style={style} className="py-1">
         {renderItem(item, index)}
       </div>
     );

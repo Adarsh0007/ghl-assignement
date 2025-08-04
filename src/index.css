@@ -5,25 +5,26 @@
 @layer base {
   body {
     @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
-    /* Remove overflow-hidden to allow mobile scrolling */
+    overflow: hidden; /* Prevent body scroll */
   }
   
   html, body, #root {
-    height: 100%;
+    height: 100vh; /* Use viewport height instead of 100% */
     margin: 0;
     padding: 0;
+    overflow: hidden; /* Prevent any overflow on main containers */
   }
 
-  /* Ensure proper mobile scrolling */
+  /* Ensure proper mobile scrolling for individual components */
   @media (max-width: 1023px) {
     html, body {
       overflow-x: hidden;
-      overflow-y: auto;
+      overflow-y: hidden; /* Prevent body scroll on mobile too */
     }
     
     #root {
-      min-height: 100vh;
-      overflow-x: hidden;
+      height: 100vh;
+      overflow: hidden;
     }
   }
 

@@ -134,7 +134,10 @@ const AddFieldModal = ({
     onClose();
   }, [onClose]);
 
-  if (!isOpen) return null;
+  // Early return for closed modal
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -416,7 +419,11 @@ const AddFieldModal = ({
                     <button
                       onClick={handleAddOption}
                       disabled={!newOption.trim()}
-                      className="px-3 py-2 bg-gray-300 dark:bg-gray-600 text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 disabled:bg-gray-200 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors"
+                      className={`px-3 py-2 rounded-lg transition-colors ${
+                        newOption.trim()
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      }`}
                     >
                       <Plus className="w-4 h-4" />
                     </button>

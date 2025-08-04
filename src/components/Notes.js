@@ -234,7 +234,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4">
         {/* Loading State */}
         {loading && (
           <Suspense fallback={<div>Loading notes...</div>}>
@@ -258,7 +258,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
 
         {/* Add Note Form */}
         {!loading && !error && isAddingNote && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 shadow-sm">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 sm:p-4 shadow-sm">
             <div className="flex items-start space-x-2">
               <div className="flex-1">
                 <textarea
@@ -270,18 +270,18 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
                   rows={4}
                   autoFocus
                 />
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-2 space-y-2 sm:space-y-0">
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     Just now
                   </span>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <Suspense fallback={<ButtonFallback onClick={() => setIsAddingNote(false)} className="px-3 py-1 text-sm bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">Cancel</ButtonFallback>}>
                       <CustomButton
                         onClick={() => setIsAddingNote(false)}
                         variant="outline"
                         size="sm"
                         text="Cancel"
-                        className="px-3 py-1 text-sm"
+                        className="px-3 py-1 text-sm w-full sm:w-auto"
                       />
                     </Suspense>
                     <Suspense fallback={<ButtonFallback onClick={handleAddNote} disabled={!newNote.trim()} className="px-3 py-1 text-sm font-medium bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Save</ButtonFallback>}>
@@ -291,7 +291,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
                         variant="primary"
                         size="sm"
                         text="Save"
-                        className="px-3 py-1 text-sm font-medium"
+                        className="px-3 py-1 text-sm font-medium w-full sm:w-auto"
                       />
                     </Suspense>
                   </div>
@@ -301,27 +301,27 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
           </div>
         )}
 
-        {/* Virtualized Notes List */}
+        {/* Notes List */}
         {!loading && !error && (
-          <div className="flex-1 overflow-hidden">
+          <div className="space-y-4">
             <Suspense fallback={<NotesSkeleton />}>
-                             <NotesVirtualizedList
-                 notes={notes}
-                 onEditNote={handleEditNote}
-                 onDeleteNote={handleDeleteNote}
-                 onSaveEdit={handleSaveEdit}
-                 editingNoteId={editingNoteId}
-                 editContent={editContent}
-                 setEditContent={setEditContent}
-                 setEditingNoteId={setEditingNoteId}
-                 formatTimestamp={formatTimestamp}
-                 hasNextPage={hasNextPage}
-                 isNextPageLoading={isNextPageLoading}
-                 loadNextPage={loadNextPage}
-                 height={400}
-                 itemHeight={160}
-                 className="notes-container"
-               />
+              <NotesVirtualizedList
+                notes={notes}
+                onEditNote={handleEditNote}
+                onDeleteNote={handleDeleteNote}
+                onSaveEdit={handleSaveEdit}
+                editingNoteId={editingNoteId}
+                editContent={editContent}
+                setEditContent={setEditContent}
+                setEditingNoteId={setEditingNoteId}
+                formatTimestamp={formatTimestamp}
+                hasNextPage={hasNextPage}
+                isNextPageLoading={isNextPageLoading}
+                loadNextPage={loadNextPage}
+                height={600}
+                itemHeight={editingNoteId ? 280 : 180}
+                className="notes-container"
+              />
             </Suspense>
           </div>
         )}

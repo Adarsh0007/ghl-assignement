@@ -12,9 +12,9 @@ function App() {
   return (
     <ThemeProvider>
       <ErrorBoundary>
-        <div className="App">
+        <div className="App h-screen overflow-hidden">
           <Suspense fallback={
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+            <div className="h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
               <Suspense fallback={
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -24,7 +24,7 @@ function App() {
                 <ComponentLoadingFallback 
                   componentName="Application" 
                   size="xl" 
-                  className="min-h-screen bg-gray-50 dark:bg-gray-900"
+                  className="h-screen bg-gray-50 dark:bg-gray-900"
                 />
               </Suspense>
             </div>
