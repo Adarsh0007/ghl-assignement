@@ -6,25 +6,46 @@
   body {
     @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white;
     overflow: hidden; /* Prevent body scroll */
+    margin-bottom: 2rem; /* Add bottom margin for full content visibility */
   }
   
   html, body, #root {
-    height: 100vh; /* Use viewport height instead of 100% */
+    min-height: 100vh; /* Use min-height instead of fixed height */
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent any overflow on main containers */
+    overflow-x: hidden; /* Only prevent horizontal overflow */
   }
 
   /* Ensure proper mobile scrolling for individual components */
   @media (max-width: 1023px) {
     html, body {
       overflow-x: hidden;
-      overflow-y: hidden; /* Prevent body scroll on mobile too */
+      overflow-y: auto; /* Allow vertical scrolling on mobile */
     }
     
     #root {
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+  }
+
+  /* Responsive bottom margins for different device types */
+  @media (max-width: 640px) {
+    body {
+      margin-bottom: 2rem; /* Increased margin for mobile */
+      padding-bottom: 1rem; /* Additional padding for mobile */
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    body {
+      margin-bottom: 1.5rem; /* Medium margin for tablets */
+    }
+  }
+
+  @media (min-width: 1025px) {
+    body {
+      margin-bottom: 2rem; /* Larger margin for desktop */
     }
   }
 
