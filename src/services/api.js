@@ -16,6 +16,10 @@ export class ApiService {
     return localApiService.fetchContactFieldsConfig();
   }
 
+  static async saveContactFieldsConfig(config) {
+    return localApiService.updateContactFieldsConfig(config);
+  }
+
   // Contact Data Operations
   static async fetchContactData() {
     return localApiService.fetchContactData();
