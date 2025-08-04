@@ -31,7 +31,7 @@ const ContactDetailsWithSidebar = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Mobile Navigation Tabs */}
       <div className="lg:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden max-w-2xl mx-auto w-full sticky top-0 z-10 flex-shrink-0">
         <div className="flex">
@@ -108,7 +108,7 @@ const ContactDetailsWithSidebar = () => {
       {/* Contact Details - Full width on mobile, 30% on desktop */}
       <div className={`${
         activeView === 'contact' ? 'block' : 'hidden'
-      } lg:block lg:w-[30%] flex flex-col h-full lg:h-screen`}>
+      } lg:block lg:w-[30%] flex flex-col h-full lg:min-h-screen`}>
         <div className="flex-1 overflow-y-auto h-full">
           <Suspense fallback={<ComponentLoadingFallback componentName="Contact Details" size="lg" />}>
             <ContactDetails onContactChange={handleContactChange} />
@@ -119,7 +119,7 @@ const ContactDetailsWithSidebar = () => {
       {/* Conversation - Full width on mobile, 50% on desktop, or 70% when notes are hidden */}
       <div className={`${
         activeView === 'conversation' ? 'block' : 'hidden'
-      } lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full lg:h-screen`}>
+      } lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full lg:min-h-screen`}>
         <div className="flex-1 overflow-y-auto h-full">
           <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
             <Conversation 
@@ -138,7 +138,7 @@ const ContactDetailsWithSidebar = () => {
         activeView === 'notes' ? 'block' : 'hidden'
       } lg:block lg:w-[20%] flex flex-col lg:border-l border-gray-200 dark:border-gray-700 ${
         !showNotes ? 'lg:hidden' : ''
-      } h-full lg:h-screen`}>
+      } h-full lg:min-h-screen`}>
         <div className="flex-1 overflow-y-auto h-full">
           <Suspense fallback={<ComponentLoadingFallback componentName="Notes" size="lg" />}>
             <Notes 

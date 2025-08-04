@@ -12,7 +12,7 @@ function App() {
   return (
     <ThemeProvider>
       <ErrorBoundary>
-        <div className="App h-screen overflow-hidden mb-[10%]">
+        <div className="App min-h-screen overflow-hidden pb-8">
           <Suspense fallback={
             <div className="h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
               <Suspense fallback={
