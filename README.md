@@ -1,4 +1,4 @@
-# 🚀 Dynamic Contact Details Page - Advanced CRM Interface
+# 🚀 Dynamic Contact Details Page
 
 A modern, config-driven React application that renders a dynamic Contact Details page with advanced features including virtualized lists, real-time search, dark/light themes, and comprehensive accessibility support. This project demonstrates enterprise-level React development practices with performance optimizations and scalable architecture.
 
