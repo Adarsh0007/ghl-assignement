@@ -200,7 +200,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-800">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
