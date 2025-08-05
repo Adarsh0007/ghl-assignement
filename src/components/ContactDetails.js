@@ -48,6 +48,45 @@ const ContactDetails = ({ onContactChange }) => {
   const editingFieldsRef = useRef(new Map());
   const currentContactIdRef = useRef(null);
 
+  // Function to close all editing fields
+  const closeAllEditingFields = useCallback(() => {
+    console.log('closeAllEditingFields called');
+    if (contactData?.id) {
+      console.log('Closing all editing fields due to tab switch for contact:', contactData.id);
+      console.log('Editing fields before closing:', Array.from(editingFields.get(contactData.id) || []));
+      
+      // Clear all editing fields for the current contact
+      editingFieldsRef.current.delete(contactData.id);
+      setEditingFields(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(contactData.id);
+        console.log('Editing fields after closing:', Array.from(newMap.get(contactData.id) || []));
+        return newMap;
+      });
+      setFieldErrors(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(contactData.id);
+        return newMap;
+      });
+      setHasUnsavedChanges(false);
+      console.log('All editing fields closed successfully');
+    } else {
+      console.log('No contact data available for closing fields');
+    }
+  }, [contactData?.id, editingFields]);
+
+  // Wrapper function for tab change that also closes editing fields
+  const handleTabChange = useCallback((newTab) => {
+    console.log(`Tab change requested: ${activeTab} -> ${newTab}`);
+    console.log(`Current editing fields before tab change:`, Array.from(editingFields.get(contactData?.id) || []));
+    
+    // Close all editing fields when switching tabs
+    closeAllEditingFields();
+    setActiveTab(newTab);
+    
+    console.log(`Tab changed to: ${newTab}`);
+  }, [closeAllEditingFields, activeTab, contactData?.id, editingFields]);
+
   // All hooks must be called before any conditional returns
   
   // Keep ref in sync with state and handle contact changes
@@ -502,7 +541,7 @@ const ContactDetails = ({ onContactChange }) => {
               <Tabs
                 tabs={section.tabs || []}
                 activeTab={activeTab}
-                onTabChange={setActiveTab}
+                onTabChange={handleTabChange}
               />
             </Suspense>
           </div>
@@ -622,7 +661,7 @@ const ContactDetails = ({ onContactChange }) => {
     handleFilterClick,
     handleAddField,
     handleOpenCountrySelector,
-    setActiveTab,
+    handleTabChange,
     setSearchTerm,
     setFilters,
     handleOwnerChange,

@@ -44,11 +44,11 @@ const Header = React.memo(({
 
   return (
     <header 
-      className="bg-white dark:bg-gray-800 px-6 pt-4"
+      className="bg-white dark:bg-gray-800 px-6 pt-4 flex-shrink-0 sticky top-0 z-10"
       role="banner"
       aria-label="Contact details navigation header"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between py-2">
         <div className="flex items-center space-x-4">
           <Suspense fallback={<ButtonFallback onClick={onBack} aria-label="Go back to previous page" title="Go back to previous page"><ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" aria-hidden="true" /></ButtonFallback>}>
             <CustomButton
