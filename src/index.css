@@ -19,12 +19,13 @@
   @media (max-width: 1023px) {
     html, body {
       overflow-x: hidden;
-      overflow-y: hidden; /* Prevent body scroll on mobile too */
+      overflow-y: auto; /* Allow vertical scrolling on mobile for navigation */
     }
     
     #root {
       height: 100vh;
       overflow-x: hidden;
+      overflow-y: auto; /* Allow vertical scrolling on mobile */
     }
   }
 

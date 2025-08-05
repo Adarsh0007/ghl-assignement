@@ -7,7 +7,6 @@ const Notes = React.lazy(() => import('./Notes.js'));
 
 // Lazy load the generic loading fallback
 const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
-const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 
 // Wrapper component to ensure Conversation is always rendered
 const ConversationWrapper = ({ contactId, contactName, contactData, onToggleNotes, showNotes, isVisible }) => {
@@ -48,24 +47,17 @@ const ContactDetailsWithSidebar = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile Navigation Tabs */}
-      <div className="lg:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden max-w-2xl mx-auto w-full sticky top-0 z-10 flex-shrink-0">
+      <div className="lg:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden max-w-2xl mx-auto w-full sticky top-0 z-50 flex-shrink-0 mb-4">
         <div className="flex">
           <div className="flex-1 relative">
-            <Suspense fallback={
-              <button className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent">
+            <button
+              onClick={() => handleViewChange('contact')}
+              className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
+            >
               Contact
             </button>
-            }>
-              <CustomButton
-                onClick={() => handleViewChange('contact')}
-                text="Contact"
-                variant="none"
-                size="md"
-                className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
-              />
-            </Suspense>
             
             {/* Active tab indicator - enhanced glow effect */}
             {activeView === 'contact' && (
@@ -74,19 +66,12 @@ const ContactDetailsWithSidebar = () => {
           </div>
           
           <div className="flex-1 relative">
-            <Suspense fallback={
-              <button className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent">
+            <button
+              onClick={() => handleViewChange('conversation')}
+              className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
+            >
               Conversation
-              </button>
-            }>
-              <CustomButton
-                onClick={() => handleViewChange('conversation')}
-                text="Conversation"
-                variant="none"
-                size="md"
-                className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
-              />
-            </Suspense>
+            </button>
             
             {/* Active tab indicator - enhanced glow effect */}
             {activeView === 'conversation' && (
@@ -95,19 +80,12 @@ const ContactDetailsWithSidebar = () => {
           </div>
           
           <div className="flex-1 relative">
-            <Suspense fallback={
-              <button className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent">
+            <button
+              onClick={() => handleViewChange('notes')}
+              className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
+            >
               Notes
-              </button>
-            }>
-              <CustomButton
-                onClick={() => handleViewChange('notes')}
-                text="Notes"
-                variant="none"
-                size="md"
-                className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent"
-              />
-            </Suspense>
+            </button>
             
             {/* Active tab indicator - enhanced glow effect */}
             {activeView === 'notes' && (
