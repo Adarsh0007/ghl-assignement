@@ -751,9 +751,9 @@ const ContactDetails = ({ onContactChange }) => {
   }
 
   return (
-    <div className="min-h-screen lg:h-full bg-gray-50 dark:bg-gray-900">
-      <div className="min-h-screen lg:h-full">
-        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-y-auto min-h-screen lg:h-full mx-2 lg:mx-0 scroll-smooth">
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
+      <div className="h-full">
+        <div className="card bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-y-auto h-full mx-2 lg:mx-0 scroll-smooth pb-16">
           {sections}
         </div>
       </div>
