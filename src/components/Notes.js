@@ -200,7 +200,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -234,7 +234,7 @@ const Notes = ({ contactId, contactName, contactData = {}, onClose }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 pb-16 space-y-4">
         {/* Loading State */}
         {loading && (
           <Suspense fallback={<div>Loading notes...</div>}>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { Send, Star, MoreVertical, ChevronDown, Expand, Paperclip, Zap, Reply } from 'lucide-react';
 import { CustomButton, ComponentLoadingFallback, ConversationSkeleton, FormField } from './globalComponents';
 import { getSmartTimeDisplay } from '../utils';
+import { useToast } from '../context/ToastContext';
 
 // Button fallback component
 const ButtonFallback = ({ children, iconClassName, textClassName, ...props }) => (
@@ -17,6 +18,9 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
   const [message, setMessage] = useState('');
   const [expandedMessages, setExpandedMessages] = useState(new Set());
   const [starRatings, setStarRatings] = useState({});
+  
+  // Toast hook
+  const { showSuccess, showInfo } = useToast();
 
   // Handle star rating toggle
   const handleStarRating = useCallback((messageId) => {
@@ -97,8 +101,43 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
 
   const handleButtonClick = useCallback((buttonText) => {
     console.log(`Button clicked: ${buttonText}`);
+    
+    // Show toast notifications for specific buttons
+    if (buttonText === 'Reply') {
+      showSuccess(`Reply action initiated for message`, 3000);
+      console.log(`Reply button clicked - Toast notification shown`);
+    } else if (buttonText === 'Track Your Order') {
+      showInfo(`Order tracking initiated. Redirecting to tracking page...`, 4000);
+      console.log(`Track Your Order button clicked - Toast notification shown`);
+    } else {
+      // For any other buttons, show a generic info toast
+      showInfo(`${buttonText} action completed`, 3000);
+      console.log(`${buttonText} button clicked - Toast notification shown`);
+    }
+    
     // Handle button actions
-  }, []);
+  }, [showSuccess, showInfo]);
+
+  // Handle attachment button click
+  const handleAttachmentClick = useCallback(() => {
+    showInfo(`File attachment dialog opened`, 3000);
+    console.log(`Attachment button clicked - Toast notification shown`);
+    // Handle attachment functionality
+  }, [showInfo]);
+
+  // Handle quick actions button click
+  const handleQuickActionsClick = useCallback(() => {
+    showInfo(`Quick actions menu opened`, 3000);
+    console.log(`Quick actions button clicked - Toast notification shown`);
+    // Handle quick actions functionality
+  }, [showInfo]);
+
+  // Handle expand/collapse button click
+  const handleExpandClick = useCallback(() => {
+    showInfo(`Message input expanded`, 3000);
+    console.log(`Expand button clicked - Toast notification shown`);
+    // Handle expand/collapse functionality
+  }, [showInfo]);
 
   // Load conversations
   const loadConversations = useCallback(async () => {
@@ -189,7 +228,7 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
   }, [contactId, loadConversations, loadStarRatings]);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-800">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-800 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
@@ -214,7 +253,7 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
       </div>
 
       {/* Conversation Threads */}
-      <div className="flex-1 p-4 space-y-4">
+      <div className="flex-1 p-4 pb-16 space-y-4 overflow-y-auto">
         {loading && (
           <Suspense fallback={<ComponentLoadingFallback componentName="Conversation Skeleton" size="lg" />}>
             <ConversationSkeleton />
@@ -422,8 +461,9 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2">
           <button
+            onClick={handleExpandClick}
             className="p-2 icon-theme-secondary btn-focus btn-interactive"
-            aria-label="Attach file"
+            aria-label="Expand message input"
           >
             <ChevronDown className="w-4 h-4" />
           </button>
@@ -459,8 +499,9 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
               className="p-2"
             />
           </Suspense>
-          <Suspense fallback={<ButtonFallback className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Attach file"><Paperclip className="w-4 h-4" /></ButtonFallback>}>
+          <Suspense fallback={<ButtonFallback onClick={handleAttachmentClick} className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Attach file"><Paperclip className="w-4 h-4" /></ButtonFallback>}>
             <CustomButton
+              onClick={handleAttachmentClick}
               variant="none"
               size="sm"
               icon={Paperclip}
@@ -468,8 +509,9 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
               className="p-2"
             />
           </Suspense>
-          <Suspense fallback={<ButtonFallback className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Quick actions"><Zap className="w-4 h-4" /></ButtonFallback>}>
+          <Suspense fallback={<ButtonFallback onClick={handleQuickActionsClick} className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200" aria-label="Quick actions"><Zap className="w-4 h-4" /></ButtonFallback>}>
             <CustomButton
+              onClick={handleQuickActionsClick}
               variant="none"
               size="sm"
               icon={Zap}

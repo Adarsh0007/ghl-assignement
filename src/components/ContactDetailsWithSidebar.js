@@ -12,8 +12,8 @@ const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js
 // Wrapper component to ensure Conversation is always rendered
 const ConversationWrapper = ({ contactId, contactName, contactData, onToggleNotes, showNotes, isVisible }) => {
   return (
-    <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full lg:min-h-screen`}>
-      <div className="flex-1 overflow-y-auto h-full">
+    <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full`}>
+      <div className="flex-1 overflow-y-auto h-full pb-16">
         <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
           <Conversation 
             contactId={contactId} 
@@ -50,7 +50,7 @@ const ContactDetailsWithSidebar = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Mobile Navigation Tabs */}
       <div className="lg:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden max-w-2xl mx-auto w-full sticky top-0 z-10 flex-shrink-0">
         <div className="flex">
@@ -79,7 +79,7 @@ const ContactDetailsWithSidebar = () => {
             <Suspense fallback={
               <button className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent">
               Conversation
-            </button>
+              </button>
             }>
               <CustomButton
                 onClick={() => handleViewChange('conversation')}
@@ -100,7 +100,7 @@ const ContactDetailsWithSidebar = () => {
             <Suspense fallback={
               <button className="w-full py-3 px-4 font-medium text-sm transition-all duration-300 ease-in-out focus:outline-none relative bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b-2 border-transparent">
               Notes
-            </button>
+              </button>
             }>
               <CustomButton
                 onClick={() => handleViewChange('notes')}
@@ -127,8 +127,8 @@ const ContactDetailsWithSidebar = () => {
       {/* Contact Details - Full width on mobile, 30% on desktop */}
       <div className={`${
         activeView === 'contact' ? 'block' : 'hidden'
-      } lg:block lg:w-[30%] flex flex-col h-full lg:min-h-screen`}>
-        <div className="flex-1 overflow-y-auto h-full">
+      } lg:block lg:w-[30%] flex flex-col h-full`}>
+        <div className="flex-1 overflow-y-auto h-full pb-16">
           <Suspense fallback={<ComponentLoadingFallback componentName="Contact Details" size="lg" />}>
             <ContactDetails onContactChange={handleContactChange} />
           </Suspense>
@@ -150,8 +150,8 @@ const ContactDetailsWithSidebar = () => {
         activeView === 'notes' ? 'block' : 'hidden'
       } lg:block lg:w-[20%] flex flex-col lg:border-l border-gray-200 dark:border-gray-700 ${
         !showNotes ? 'lg:hidden' : ''
-      } h-full lg:min-h-screen`}>
-        <div className="flex-1 overflow-y-auto h-full">
+      } h-full`}>
+        <div className="flex-1 overflow-y-auto h-full pb-16">
           <Suspense fallback={<ComponentLoadingFallback componentName="Notes" size="lg" />}>
             <Notes 
               contactId={currentContactData?.id || 1} 
