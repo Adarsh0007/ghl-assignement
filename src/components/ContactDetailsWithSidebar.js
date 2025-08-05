@@ -9,6 +9,25 @@ const Notes = React.lazy(() => import('./Notes.js'));
 const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/ComponentLoadingFallback.js'));
 const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js'));
 
+// Wrapper component to ensure Conversation is always rendered
+const ConversationWrapper = ({ contactId, contactName, contactData, onToggleNotes, showNotes, isVisible }) => {
+  return (
+    <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full lg:min-h-screen`}>
+      <div className="flex-1 overflow-y-auto h-full">
+        <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
+          <Conversation 
+            contactId={contactId} 
+            contactName={contactName}
+            contactData={contactData}
+            onToggleNotes={onToggleNotes}
+            showNotes={showNotes}
+          />
+        </Suspense>
+      </div>
+    </div>
+  );
+};
+
 const ContactDetailsWithSidebar = () => {
   const [activeView, setActiveView] = useState('contact'); // 'contact', 'conversation', 'notes'
   const [currentContactData, setCurrentContactData] = useState(null);
@@ -117,21 +136,14 @@ const ContactDetailsWithSidebar = () => {
       </div>
 
       {/* Conversation - Full width on mobile, 50% on desktop, or 70% when notes are hidden */}
-      <div className={`${
-        activeView === 'conversation' ? 'block' : 'hidden'
-      } lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full lg:min-h-screen`}>
-        <div className="flex-1 overflow-y-auto h-full">
-          <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
-            <Conversation 
-              contactId={currentContactData?.id || 1} 
-              contactName={currentContactData ? `${currentContactData.firstName} ${currentContactData.lastName}` : "Olivia John"}
-              contactData={currentContactData || {}}
-              onToggleNotes={handleToggleNotes}
-              showNotes={showNotes}
-            />
-          </Suspense>
-        </div>
-      </div>
+      <ConversationWrapper
+        contactId={currentContactData?.id || 1} 
+        contactName={currentContactData ? `${currentContactData.firstName} ${currentContactData.lastName}` : "Olivia John"}
+        contactData={currentContactData || {}}
+        onToggleNotes={handleToggleNotes}
+        showNotes={showNotes}
+        isVisible={activeView === 'conversation'}
+      />
 
       {/* Notes - Full width on mobile, 20% on desktop */}
       <div className={`${
