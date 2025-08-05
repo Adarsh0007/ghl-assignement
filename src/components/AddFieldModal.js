@@ -24,6 +24,7 @@ const AddFieldModal = ({
   });
   const [newOption, setNewOption] = useState('');
   const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
 
   // Get available field types for this folder
   const availableFieldTypes = useMemo(() => {
@@ -42,27 +43,35 @@ const AddFieldModal = ({
     return DynamicFieldService.generateUniqueKey(key, existingFields);
   }, [existingFields]);
 
-  // Validate fields when fieldConfig changes
+  // Validate fields when fieldConfig changes, but only for touched fields
   useEffect(() => {
+    // Don't run validation if no fields have been touched yet
+    const hasAnyTouchedFields = Object.values(touchedFields).some(touched => touched);
+    if (!hasAnyTouchedFields) {
+      setErrors({});
+      return;
+    }
+
     const validation = DynamicFieldService.validateFieldConfig(fieldConfig);
     
     if (!validation.isValid) {
       const errorMap = {};
       validation.errors.forEach(error => {
-        if (error.includes('key')) errorMap.key = error;
-        if (error.includes('label')) errorMap.label = error;
-        if (error.includes('type')) errorMap.type = error;
-        if (error.includes('Options')) errorMap.options = error;
+        // Only set errors for fields that have been touched by the user
+        if (error.includes('key') && touchedFields.key) errorMap.key = error;
+        if (error.includes('label') && touchedFields.label) errorMap.label = error;
+        if (error.includes('type') && touchedFields.type) errorMap.type = error;
+        if (error.includes('Options') && touchedFields.options) errorMap.options = error;
         if (error.includes('length')) {
           // Handle length-specific errors
-          if (error.includes('Minimum length')) {
+          if (error.includes('Minimum length') && touchedFields.minLength) {
             errorMap.minLength = error;
-          } else if (error.includes('Maximum length')) {
+          } else if (error.includes('Maximum length') && touchedFields.maxLength) {
             errorMap.maxLength = error;
-          } else if (error.includes('cannot be greater')) {
+          } else if (error.includes('cannot be greater') && (touchedFields.minLength || touchedFields.maxLength)) {
             errorMap.minLength = error;
             errorMap.maxLength = error;
-          } else {
+          } else if (touchedFields.minLength || touchedFields.maxLength) {
             errorMap.length = error;
           }
         }
@@ -72,7 +81,7 @@ const AddFieldModal = ({
       // Clear all errors if validation passes
       setErrors({});
     }
-  }, [fieldConfig]);
+  }, [fieldConfig, touchedFields]);
 
   // Handle field config changes
   const handleConfigChange = useCallback((field, value) => {
@@ -87,13 +96,20 @@ const AddFieldModal = ({
       return newConfig;
     });
     
+    // Mark field as touched when user interacts with it
+    setTouchedFields(prev => ({ ...prev, [field]: true }));
+    
     // Don't clear errors immediately - let useEffect handle validation
   }, [generateKey]);
 
-  // Check if there are any errors
+  // Check if there are any errors on touched fields
   const hasErrors = useMemo(() => {
-    return Object.keys(errors).some(key => errors[key] !== null && errors[key] !== undefined);
-  }, [errors]);
+    return Object.keys(errors).some(key => 
+      errors[key] !== null && 
+      errors[key] !== undefined && 
+      touchedFields[key]
+    );
+  }, [errors, touchedFields]);
 
   // Check if required fields are filled
   const isFormValid = useMemo(() => {
@@ -110,6 +126,8 @@ const AddFieldModal = ({
         options: [...prev.options, newOption.trim()]
       }));
       setNewOption('');
+      // Mark options field as touched when user adds an option
+      setTouchedFields(prev => ({ ...prev, options: true }));
     }
   }, [newOption, fieldConfig.options]);
 
@@ -119,6 +137,8 @@ const AddFieldModal = ({
       ...prev,
       options: prev.options.filter(option => option !== optionToRemove)
     }));
+    // Mark options field as touched when user removes an option
+    setTouchedFields(prev => ({ ...prev, options: true }));
   }, []);
 
   // Handle save
@@ -185,8 +205,8 @@ const AddFieldModal = ({
                 onChange={(value) => handleConfigChange('label', value)}
                 placeholder={suggestedName}
                 required
-                error={errors.label}
-                touched={!!errors.label}
+                error={touchedFields.label ? errors.label : null}
+                touched={touchedFields.label || false}
                 className="mb-0"
               />
             </Suspense>
@@ -218,8 +238,8 @@ const AddFieldModal = ({
                 onChange={(value) => handleConfigChange('key', value)}
                 placeholder="auto-generated"
                 required
-                error={errors.key}
-                touched={!!errors.key}
+                error={touchedFields.key ? errors.key : null}
+                touched={touchedFields.key || false}
                 className="mb-0"
               />
             </Suspense>
@@ -334,8 +354,8 @@ const AddFieldModal = ({
                       value={fieldConfig.minLength}
                       onChange={(value) => handleConfigChange('minLength', value)}
                       min={0}
-                      error={errors.minLength}
-                      touched={!!errors.minLength}
+                      error={touchedFields.minLength ? errors.minLength : null}
+                      touched={touchedFields.minLength || false}
                       className="mb-0"
                     />
                   </Suspense>
@@ -364,8 +384,8 @@ const AddFieldModal = ({
                       value={fieldConfig.maxLength}
                       onChange={(value) => handleConfigChange('maxLength', value)}
                       min={1}
-                      error={errors.maxLength}
-                      touched={!!errors.maxLength}
+                      error={touchedFields.maxLength ? errors.maxLength : null}
+                      touched={touchedFields.maxLength || false}
                       className="mb-0"
                     />
                   </Suspense>
@@ -410,7 +430,11 @@ const AddFieldModal = ({
                         type="text"
                         name="newOption"
                         value={newOption}
-                        onChange={(value) => setNewOption(value)}
+                        onChange={(value) => {
+                          setNewOption(value);
+                          // Mark options field as touched when user types in new option
+                          setTouchedFields(prev => ({ ...prev, options: true }));
+                        }}
                         placeholder="Add new option"
                         className="flex-1 mb-0"
                         onKeyPress={(e) => e.key === 'Enter' && handleAddOption()}
