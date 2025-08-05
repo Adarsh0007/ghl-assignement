@@ -4,10 +4,40 @@ A modern, config-driven React application that renders a dynamic Contact Details
 
 ## 📚 Documentation
 
+### **Project Resources**
 - **[Project Wiki](https://github.com/Adarsh0007/ghl-assignement/wiki/Dynamic-Contact-Details-%E2%80%90-Complete-Project-Wiki)** - Comprehensive architecture and technical details
 - **[Performance Optimizations](PERFORMANCE_OPTIMIZATIONS.md)** - Detailed performance improvements
 - **[Production Optimizations](PRODUCTION_OPTIMIZATIONS.md)** - Production build optimizations and deployment
 - **[Virtualized Lists Guide](src/components/globalComponents/VIRTUALIZED_LIST_README.md)** - Virtualization implementation
+
+### **🚀 Deployment & Environment**
+
+#### **Production Build**
+```bash
+npm run build
+```
+
+#### **Deployment Options**
+- **Vercel**: https://ghl-assignement.vercel.app/
+- **Netlify**: Static site deployment
+- **AWS S3**: Static hosting with CloudFront
+- **Docker**: Containerized deployment
+
+#### **Environment Configuration**
+```bash
+# Development
+REACT_APP_API_URL=http://localhost:3001
+REACT_APP_ENABLE_LOGGING=true
+
+# Production
+REACT_APP_API_URL=https://api.yourapp.com
+REACT_APP_ENABLE_LOGGING=false
+
+# Monitoring & Analytics
+REACT_APP_SENTRY_DSN=your_sentry_dsn_here
+REACT_APP_SEGMENT_WRITE_KEY=your_segment_write_key_here
+REACT_APP_GA_TRACKING_ID=your_ga_tracking_id_here
+```
 
 ## 🎯 Core Features
 
@@ -374,34 +404,7 @@ npm run eject          # Eject from Create React App
 - **Performance Monitoring**: Bundle analysis and runtime metrics
 - **Accessibility Testing**: Screen reader and keyboard navigation
 
-## 🚀 Deployment
 
-### **Production Build**
-```bash
-npm run build
-```
-
-### **Deployment Options**
-- **Vercel**: https://ghl-assignement.vercel.app/
-- **Netlify**: Static site deployment
-- **AWS S3**: Static hosting with CloudFront
-- **Docker**: Containerized deployment
-
-### **Environment Configuration**
-```bash
-# Development
-REACT_APP_API_URL=http://localhost:3001
-REACT_APP_ENABLE_LOGGING=true
-
-# Production
-REACT_APP_API_URL=https://api.yourapp.com
-REACT_APP_ENABLE_LOGGING=false
-
-# Monitoring & Analytics
-REACT_APP_SENTRY_DSN=your_sentry_dsn_here
-REACT_APP_SEGMENT_WRITE_KEY=your_segment_write_key_here
-REACT_APP_GA_TRACKING_ID=your_ga_tracking_id_here
-```
 
 ## 🎯 Use Cases
 
