@@ -13,17 +13,15 @@ const CustomButton = React.lazy(() => import('./globalComponents/CustomButton.js
 const ConversationWrapper = ({ contactId, contactName, contactData, onToggleNotes, showNotes, isVisible }) => {
   return (
     <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full`}>
-      <div className="flex-1 overflow-y-auto h-full pb-16">
-        <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
-          <Conversation 
-            contactId={contactId} 
-            contactName={contactName}
-            contactData={contactData}
-            onToggleNotes={onToggleNotes}
-            showNotes={showNotes}
-          />
-        </Suspense>
-      </div>
+      <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
+        <Conversation 
+          contactId={contactId} 
+          contactName={contactName}
+          contactData={contactData}
+          onToggleNotes={onToggleNotes}
+          showNotes={showNotes}
+        />
+      </Suspense>
     </div>
   );
 };

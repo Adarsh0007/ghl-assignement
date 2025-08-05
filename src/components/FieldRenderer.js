@@ -58,17 +58,20 @@ const FieldRenderer = ({
 
   // Reset edit value when external editing state changes
   useEffect(() => {
+    console.log(`Field ${field.key}: externalIsEditing changed to ${externalIsEditing}`);
     if (!externalIsEditing) {
+      console.log(`Field ${field.key}: Resetting edit state`);
       // Use a small delay to ensure state updates are processed in order
       const timeoutId = setTimeout(() => {
         setEditValue(value);
         setValidationError(null);
         setSaveError(null);
+        console.log(`Field ${field.key}: Edit state reset completed`);
       }, 0);
       
       return () => clearTimeout(timeoutId);
     }
-  }, [externalIsEditing, value]);
+  }, [externalIsEditing, value, field.key]);
 
   // Cleanup effect when field changes
   useEffect(() => {
@@ -138,11 +141,13 @@ const FieldRenderer = ({
   }, [editValue, field.type, field.required, field.key, onChange, selectedCountry]);
 
   const handleEdit = useCallback(() => {
+    console.log(`Edit button clicked for field: ${field.key}`);
     // Prevent multiple rapid clicks
     if (isSaving) return;
     
     // Add a small delay to prevent race conditions
     setTimeout(() => {
+      console.log(`Starting edit for field: ${field.key}`);
       setEditValue(value);
       setValidationError(null);
       setSaveError(null);
@@ -150,16 +155,19 @@ const FieldRenderer = ({
       // Notify parent about edit start
       if (onFieldEditStart) {
         onFieldEditStart(field.key);
+        console.log(`Notified parent about edit start for field: ${field.key}`);
       }
     }, 0);
   }, [value, onFieldEditStart, field.key, isSaving]);
 
   const handleCancel = useCallback(() => {
+    console.log(`Cancel button clicked for field: ${field.key}`);
     // Prevent multiple rapid clicks
     if (isSaving) return;
     
     // Add a small delay to prevent race conditions
     setTimeout(() => {
+      console.log(`Cancelling edit for field: ${field.key}`);
       setEditValue(value); // Reset to original value
       setValidationError(null);
       setSaveError(null);
@@ -167,6 +175,7 @@ const FieldRenderer = ({
       // Notify parent about edit cancel
       if (onFieldEditCancel) {
         onFieldEditCancel(field.key);
+        console.log(`Notified parent about edit cancel for field: ${field.key}`);
       }
     }, 0);
   }, [value, onFieldEditCancel, field.key, isSaving]);
