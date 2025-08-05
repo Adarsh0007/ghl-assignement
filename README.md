@@ -19,9 +19,6 @@ npm run build
 
 #### **Deployment Options**
 - **Vercel**: https://ghl-assignement.vercel.app/
-- **Netlify**: Static site deployment
-- **AWS S3**: Static hosting with CloudFront
-- **Docker**: Containerized deployment
 
 #### **Environment Configuration**
 ```bash
