@@ -91,6 +91,17 @@ REACT_APP_GA_TRACKING_ID=your_ga_tracking_id_here
 - **Page Navigation**: Seamless navigation from first to last contact
 - **Interactive Feedback**: Console messages for major interactive elements (Call button, Reply/Track buttons)
 - **Skeleton Loading**: Animated skeleton placeholders for content while data is loading
+- **Toast Notification System**: Real-time user feedback for conversation interactions
+  - **Reply Button**: Success toast when user clicks "Reply" button in conversation messages
+  - **Track Order Button**: Info toast when user clicks "Track Your Order" button with redirect message
+  - **Attachment Button**: Info toast when user clicks attachment icon in message input
+  - **Zap Button**: Info toast when user clicks quick actions (Zap) button in message input
+  - **Expand Button**: Info toast when user clicks expand/chevron button in message input
+  - **Toast Types**: Success (green), Info (blue), Warning (yellow), Error (red) with smooth animations
+  - **Auto-dismiss**: Toasts automatically disappear after 3-4 seconds
+  - **Manual Close**: Users can manually close toasts with X button
+  - **Dark Mode Support**: Toast notifications adapt to current theme
+  - **Global Context**: Toast system available throughout the application
 
 ### 👥 **Contact Management**
 - **Followers & Owners Update**: Contact summary followers and owners can be updated and persist after reload
