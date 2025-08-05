@@ -27,6 +27,12 @@
       overflow-x: hidden;
       overflow-y: auto; /* Allow vertical scrolling on mobile */
     }
+    
+    /* Ensure conversation component can scroll properly on mobile */
+    .conversation-container {
+      overflow-y: auto;
+      height: calc(100vh - 120px); /* Account for navigation tabs */
+    }
   }
 
   /* Custom scrollbar styling */

@@ -11,7 +11,7 @@ const ComponentLoadingFallback = React.lazy(() => import('./globalComponents/Com
 // Wrapper component to ensure Conversation is always rendered
 const ConversationWrapper = ({ contactId, contactName, contactData, onToggleNotes, showNotes, isVisible }) => {
   return (
-    <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full`}>
+    <div className={`${isVisible ? 'block' : 'hidden'} lg:block lg:flex-1 flex flex-col lg:border-l border-gray-200 dark:border-gray-700 h-full min-h-0`}>
       <Suspense fallback={<ComponentLoadingFallback componentName="Conversation" size="lg" />}>
         <Conversation 
           contactId={contactId} 

@@ -228,7 +228,7 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
   }, [contactId, loadConversations, loadStarRatings]);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-800">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-800 conversation-container">
       {/* Header */}
       <div className="flex items-center justify-between p-4 flex-shrink-0">
         <div className="flex items-center space-x-3">
@@ -253,7 +253,7 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
       </div>
 
       {/* Conversation Threads */}
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto pb-24 sm:pb-4">
         {loading && (
           <Suspense fallback={<ComponentLoadingFallback componentName="Conversation Skeleton" size="lg" />}>
             <ConversationSkeleton />
@@ -458,7 +458,7 @@ const Conversation = ({ contactId, contactName = "Olivia John", contactData = {}
       </div>
 
       {/* Message Input */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800 sticky bottom-0">
         <div className="flex items-center space-x-2">
           <button
             onClick={handleExpandClick}
